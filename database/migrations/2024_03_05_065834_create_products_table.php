@@ -11,21 +11,25 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('username', 50)->unique();
-            $table->string('password');
-            $table->string('name', 50);
-            $table->boolean('account_status')->default(1);
-            $table->string('role', 20);
+            $table->string('code', 20)->nullable()->unique();
+            $table->string('name', 100);
+            $table->string('photo', 100)->nullable();
+            $table->decimal('stock', $precision = 8, $scale = 2)->default(0.0);
+            $table->string('uom', 50);
+            $table->integer('purchase_price');
+            $table->integer('selling_price');
+            $table->integer('member_price');
+            $table->string('remarks', 150)->nullable();
             $table->foreignId('created_by')
                 ->nullable()
-                ->constrained('users')
+                ->constrained('users', indexName: 'products_created_by')
                 ->cascadeOnUpdate() // when updated, all related rows also get updated
                 ->restrictOnDelete(); // prevent delete if there are related rows
             $table->foreignId('updated_by')
                 ->nullable()
-                ->constrained('users')
+                ->constrained('users', indexName: 'products_updated_by')
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
             $table->timestamps();
@@ -37,6 +41,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('products');
     }
 };

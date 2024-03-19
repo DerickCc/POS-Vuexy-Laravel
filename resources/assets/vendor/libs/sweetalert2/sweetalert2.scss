@@ -6,7 +6,7 @@
 // Sweet Alert2 Modal
 .swal2-modal.swal2-popup {
   .swal2-title {
-    margin: 1.875rem 0 1rem 0;
+    margin: 0;
     max-width: $swal2-width * 0.5;
     line-height: light.$line-height-base;
   }
@@ -16,7 +16,8 @@
   }
 
   .swal2-actions {
-    margin-top: 1rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
     .btn {
       align-items: center;
     }

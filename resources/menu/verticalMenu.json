@@ -1,37 +1,85 @@
 {
-  "menu": [
-    {
-      "url": "/",
-      "name": "Home",
-      "icon": "menu-icon tf-icons ti ti-smart-home",
-      "slug": "pages-home"
-    },
-    {
-      "url": "page-2",
-      "icon": "menu-icon tf-icons ti ti-file",
-      "name": "Page 2",
-      "slug": "pages-page-2"
-    },
-    {
-      "url": "pages/misc-error",
-      "name": "Error",
-      "icon": "menu-icon tf-icons ti ti-alert-triangle",
-      "slug": "pages-misc-error",
-      "target": "_blank"
-    },
-    {
-      "url": "auth/login-basic",
-      "name": "Login",
-      "icon": "menu-icon tf-icons ti ti-login",
-      "slug": "auth-login-basic",
-      "target": "_blank"
-    },
-    {
-      "url": "auth/register-basic",
-      "name": "Register",
-      "icon": "menu-icon tf-icons ti ti-user",
-      "slug": "auth-register-basic",
-      "target": "_blank"
-    }
-  ]
+    "menu": [
+        {
+            "name": "Dashboard",
+            "url": "/",
+            "slug": "dashboard",
+            "icon": "menu-icon tf-icons ti ti-smart-home"
+        },
+        {
+            "name": "Master",
+            "slug": "master",
+            "icon": "menu-icon tf-icons ti ti-book-2",
+            "submenu": [
+                {
+                    "url": "/supplier",
+                    "name": "Supplier",
+                    "slug": "master-supplier"
+                },
+                {
+                    "url": "/customer",
+                    "name": "Pelanggan",
+                    "slug": "master-customer"
+                }
+            ]
+        },
+        {
+            "name": "Inventory",
+            "slug": "inventory",
+            "icon": "menu-icon tf-icons ti ti-building-warehouse",
+            "submenu": [
+                {
+                    "url": "/product",
+                    "name": "Data Barang",
+                    "slug": "inventory-product"
+                }
+            ]
+        },
+        {
+            "name": "Transaksi",
+            "slug": "transaction",
+            "icon": "menu-icon tf-icons ti ti-receipt",
+            "submenu": [
+                {
+                    "url": "/purchase-order",
+                    "name": "Transaksi Pembelian",
+                    "slug": "transaction-purchase-order"
+                },
+                {
+                    "url": "/sales-order",
+                    "name": "Transaksi Penjualan",
+                    "slug": "transaction-sales-order"
+                }
+            ]
+        },
+        {
+            "name": "Laporan",
+            "slug": "report",
+            "icon": "menu-icon tf-icons ti ti-file",
+            "submenu": [
+                {
+                    "url": "/purchase-report",
+                    "name": "Laporan Pembelian",
+                    "slug": "report-purchase-report"
+                },
+                {
+                    "url": "/sales-report",
+                    "name": "Laporan Penjualan",
+                    "slug": "report-sales-report"
+                }
+            ]
+        },
+        {
+            "name": "Pengaturan",
+            "slug": "settings",
+            "icon": "menu-icon tf-icons ti ti-settings",
+            "submenu": [
+                {
+                    "url": "/user",
+                    "name": "Data User",
+                    "slug": "settings-user"
+                }
+            ]
+        }
+    ]
 }

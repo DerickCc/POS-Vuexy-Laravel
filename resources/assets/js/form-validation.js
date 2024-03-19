@@ -28,9 +28,6 @@
         if (!form.checkValidity()) {
           event.preventDefault();
           event.stopPropagation();
-        } else {
-          // Submit your form
-          alert('Submitted!!!');
         }
 
         form.classList.add('was-validated');

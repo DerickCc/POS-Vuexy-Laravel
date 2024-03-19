@@ -31,13 +31,13 @@ class Helpers
       'footerFixed' => false,
       'customizerControls' => [
         'rtl',
-      'style',
-      'headerType',
-      'contentLayout',
-      'layoutCollapsed',
-      'showDropdownOnHover',
-      'layoutNavbarOptions',
-      'themes',
+        'style',
+        'headerType',
+        'contentLayout',
+        'layoutCollapsed',
+        'showDropdownOnHover',
+        'layoutNavbarOptions',
+        'themes',
       ],
       //   'defaultLanguage'=>'en',
     ];
@@ -92,13 +92,12 @@ class Helpers
       }
     }
     $styleVal = $data['myStyle'] == "dark" ? "dark" : "light";
-    if(isset($_COOKIE['mode'])){
-      if($_COOKIE['mode'] === "system"){
-        if(isset($_COOKIE['colorPref'])) {
+    if (isset($_COOKIE['mode'])) {
+      if ($_COOKIE['mode'] === "system") {
+        if (isset($_COOKIE['colorPref'])) {
           $styleVal = Str::lower($_COOKIE['colorPref']);
         }
-      }
-      else {
+      } else {
         $styleVal = $_COOKIE['mode'];
       }
     }

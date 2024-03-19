@@ -2,11 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\language\LanguageController;
-use App\Http\Controllers\pages\HomePage;
+use App\Http\Controllers\pages\DashboardController;
 use App\Http\Controllers\pages\Page2;
 use App\Http\Controllers\pages\MiscError;
 use App\Http\Controllers\authentications\LoginBasic;
 use App\Http\Controllers\authentications\RegisterBasic;
+use App\Http\Controllers\pages\CustomerController;
+use App\Http\Controllers\pages\SupplierController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,8 +22,21 @@ use App\Http\Controllers\authentications\RegisterBasic;
 */
 
 // Main Page Route
-Route::get('/', [HomePage::class, 'index'])->name('pages-home');
-Route::get('/page-2', [Page2::class, 'index'])->name('pages-page-2');
+//----------------
+// Dashboard
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard'); // name utk slug ny menu
+
+// Supplier
+Route::get('/supplier', [SupplierController::class, 'index'])->name('master-supplier');
+Route::get('/supplier/get-data', [SupplierController::class, 'getData'])->name('supplier.getData');
+Route::get('/supplier/create', [SupplierController::class, 'create'])->name('supplier.detail');
+Route::post('/supplier/store', [SupplierController::class, 'store'])->name('supplier.store');
+Route::get('/supplier/{id}/edit', [SupplierController::class, 'edit'])->name('supplier.edit');
+Route::put('/supplier/{id}/update', [SupplierController::class, 'update'])->name('supplier.update');
+Route::delete('/supplier/{id}/delete', [SupplierController::class, 'delete'])->name('supplier.delete');
+
+// Customer
+Route::get('/customer', [CustomerController::class, 'index'])->name('customer');
 
 // locale
 Route::get('lang/{locale}', [LanguageController::class, 'swap']);

@@ -15,7 +15,9 @@
 @vite([
   'resources/assets/vendor/libs/node-waves/node-waves.scss',
   'resources/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.scss',
-  'resources/assets/vendor/libs/typeahead-js/typeahead.scss'
+  'resources/assets/vendor/libs/typeahead-js/typeahead.scss',
+  'resources/assets/vendor/libs/animate-css/animate.scss',
+  'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss'
 ])
 
 <!-- Vendor Styles -->
