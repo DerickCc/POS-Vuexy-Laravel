@@ -7,7 +7,23 @@
 @section('title', 'Supplier')
 
 @section('content')
-  <h3>Supplier</h3>
+  <div class="d-flex align-items-center mb-3">
+    <h3 class="mb-0">Supplier</h3>
+    <h2 class="mb-0 mx-3">|</h2>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item">
+          <a class="text-secondary" href="javascript:void(0)">Master</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="{{ route('master-supplier') }}">Data Supplier</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a class="text-secondary" href="javascript:void(0)">{{ isset($edit) ? 'Edit' : 'Tambah' }} Supplier</a>
+        </li>
+      </ol>
+    </nav>
+  </div>
   <div class="card">
     <div class="card-header d-flex align-items-center">
       <i class="ti ti-pencil-plus ti-lg me-2"></i>
@@ -19,7 +35,8 @@
       </div>
     @endif
     <div class="card-body">
-      <form id="supplierForm" action="{{ isset($edit) ? route('supplier.update', $edit->id) : route('supplier.store') }}"
+      <form id="supplierForm"
+        action="{{ isset($edit) ? route('master-supplier.update', $edit->id) : route('master-supplier.store') }}"
         method="POST"
       >
         @if (isset($edit))

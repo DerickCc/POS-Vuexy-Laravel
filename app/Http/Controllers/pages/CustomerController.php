@@ -9,6 +9,6 @@ class CustomerController extends Controller
 {
     public function index() 
     {
-        return view('content.pages.customer.customer-data');
+        return view('content.pages.master.customer.customer-data');
     }
 }

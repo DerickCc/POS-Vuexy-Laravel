@@ -2,7 +2,7 @@
     "menu": [
         {
             "name": "Dashboard",
-            "url": "/",
+            "url": "/dashboard",
             "slug": "dashboard",
             "icon": "menu-icon tf-icons ti ti-smart-home"
         },
@@ -12,12 +12,12 @@
             "icon": "menu-icon tf-icons ti ti-book-2",
             "submenu": [
                 {
-                    "url": "/supplier",
+                    "url": "/master/supplier",
                     "name": "Supplier",
                     "slug": "master-supplier"
                 },
                 {
-                    "url": "/customer",
+                    "url": "/master/customer",
                     "name": "Pelanggan",
                     "slug": "master-customer"
                 }

@@ -4,7 +4,6 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -37,14 +36,4 @@ class User extends Authenticatable
     protected $casts = [
         'password' => 'hashed',
     ];
-
-    function createdBy(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'created_by');
-    }
-
-    function updatedBy(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'updated_by');
-    }
 }

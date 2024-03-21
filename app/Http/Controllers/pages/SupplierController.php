@@ -20,28 +20,29 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        return view('content.pages.supplier.supplier-data');
+        return view('content.pages.master.supplier.supplier-data');
     }
 
     public function getData(Request $request)
     {
         if ($request->ajax()) {
-            Log::error($request->draw);
+            Log::error($request);
             $supplier = Supplier::query();
 
-            // gbs sort by action, gnti jd code
-            $orderCol = $request->input('order.0.column') == 0 ? 'code' : $this->columns[$request->input('order.0.column')];
-            // dafult nya asc, gnti jd desc
-            $orderDir = $request->draw == 1 ? 'desc' : $request->input('order.0.dir');
+            //can't sort by action, so set it to code
+            $orderCol = $this->columns[$request->input('order.0.column')];
+            // set default sorting to desc
+            $orderDir = $request->input('order.0.dir');
 
             return DataTables::eloquent($supplier)
+                // add column
                 ->addColumn('action', function ($data) {
                     return '
                     <div class="d-flex justify-content-between">
-                        <a href="' . route('supplier.edit', $data->id) . '">
+                        <a href="' . route('master-supplier.edit', $data->id) . '">
                             <i class="ti ti-edit ti-sm text-warning me-2"></i>
                         </a>
-                        <a href="' . route('supplier.delete', $data->id) . '" onclick="confirmDelete(event)">
+                        <a href="' . route('master-supplier.delete', $data->id) . '" onclick="confirmDelete(event, \'#supplier-datatable\')">
                             <i class="ti ti-trash ti-sm text-danger"></i>
                         </a>
                     </div>';
@@ -64,7 +65,20 @@ class SupplierController extends Controller
                 ->addColumn('remarks', function ($data) {
                     return $data->remarks ?? '-';
                 })
+
+                // handle filter
+                ->filterColumn('name', function ($query, $keyword) {
+                    $query->where('name', 'like', "%{$keyword}%");
+                })
+                ->filterColumn('pic', function ($query, $keyword) {
+                    $query->where('pic', 'like', "%{$keyword}%");
+                })
+                ->filterColumn('phone_no', function ($query, $keyword) {
+                    $query->where('phone_no', 'like', "%{$keyword}%");
+                })
                 ->rawColumns(['action'])
+
+                //handle sorting
                 ->order(function ($query) use ($orderCol, $orderDir) {
                     $query->orderBy($orderCol, $orderDir); // Order by the specified column
                 })
@@ -77,7 +91,7 @@ class SupplierController extends Controller
      */
     public function create()
     {
-        return view('content.pages.supplier.supplier-detail');
+        return view('content.pages.master.supplier.supplier-detail');
     }
 
     /**
@@ -120,7 +134,7 @@ class SupplierController extends Controller
     public function edit(string $id)
     {
         $edit = Supplier::findOrFail($id);
-        return view('content.pages.supplier.supplier-detail', compact('edit'));
+        return view('content.pages.master.supplier.supplier-detail', compact('edit'));
     }
 
     /**
