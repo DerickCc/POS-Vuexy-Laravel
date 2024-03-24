@@ -13,7 +13,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 class SupplierController extends Controller
 {
-    protected $columns = ['action', 'code', 'name', 'pic', 'address', 'phone_no', 'remarks'];
+    protected $columns = ['action', 'code', 'name', 'pic', 'phone_no', 'address', 'remarks'];
 
     /**
      * Display a listing of the resource.
@@ -26,7 +26,6 @@ class SupplierController extends Controller
     public function getData(Request $request)
     {
         if ($request->ajax()) {
-            Log::error($request);
             $supplier = Supplier::query();
 
             //can't sort by action, so set it to code
@@ -68,13 +67,25 @@ class SupplierController extends Controller
 
                 // handle filter
                 ->filterColumn('name', function ($query, $keyword) {
-                    $query->where('name', 'like', "%{$keyword}%");
+                    $words = explode(' ', $keyword);
+
+                    $query->where(function ($query) use ($words) {
+                        foreach ($words as $word) {
+                            $query->where('name', 'like', '%' . $word . '%');
+                        }
+                    });
                 })
                 ->filterColumn('pic', function ($query, $keyword) {
-                    $query->where('pic', 'like', "%{$keyword}%");
+                    $words = explode(' ', $keyword);
+
+                    $query->where(function ($query) use ($words) {
+                        foreach ($words as $word) {
+                            $query->where('pic', 'like', '%' . $word . '%');
+                        }
+                    });
                 })
                 ->filterColumn('phone_no', function ($query, $keyword) {
-                    $query->where('phone_no', 'like', "%{$keyword}%");
+                    $query->where('phone_no', 'like', '%' . $keyword . '%');
                 })
                 ->rawColumns(['action'])
 
@@ -107,7 +118,7 @@ class SupplierController extends Controller
                     'name' => $data['name'],
                     'pic' => $data['pic'],
                     'address' => $data['address'],
-                    'phone_no' => $data['phoneNo'],
+                    'phone_no' => $data['phone_no'],
                     'remarks' => $data['remarks'],
                 ]);
 
@@ -116,22 +127,20 @@ class SupplierController extends Controller
 
                 $supplier->saveOrFail();
 
-                if (!$supplier) {
-                    abort(500);
-                }
+                if (!$supplier) abort(500);       
             });
         } catch (\Exception $e) {
             Log::error('Gagal menambah Supplier: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Data Gagal disimpan: ' . $e);
         }
 
-        return to_route('master-supplier')->with('success', 'Data Berhasil Disimpan!');
+        return to_route('master-supplier.index')->with('success', 'Data Berhasil Disimpan!');
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(int $id)
     {
         $edit = Supplier::findOrFail($id);
         return view('content.pages.master.supplier.supplier-detail', compact('edit'));
@@ -153,17 +162,17 @@ class SupplierController extends Controller
                     'name' => $data['name'],
                     'pic' => $data['pic'],
                     'address' => $data['address'],
-                    'phone_no' => $data['phoneNo'],
+                    'phone_no' => $data['phone_no'],
                     'remarks' => $data['remarks'],
                     'updated_by' => Auth::id(),
                 ]);
             });
         } catch (\Exception $e) {
-            Log::error('Gagal Menambah Supplier: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Data Gagal Disimpan ' . $e);
+            Log::error('Gagal Mengupdate Supplier: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Data Gagal Diupdate ' . $e);
         }
 
-        return to_route('master-supplier')->with('success', 'Data Berhasil Diupdate!');
+        return to_route('master-supplier.index')->with('success', 'Data Berhasil Diupdate!');
     }
 
     /**
@@ -179,7 +188,7 @@ class SupplierController extends Controller
                 if (!$deleted) abort(500);
             });
         } catch (\Exception $e) {
-            Log::error('Data Gagal Dihapus: ' . $e->getMessage());
+            Log::error('Gagal Menghapus Supplier: ' . $e->getMessage());
         }
     }
 }

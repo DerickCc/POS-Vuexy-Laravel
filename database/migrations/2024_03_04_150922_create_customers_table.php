@@ -15,10 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('code', 20)->nullable()->unique();
             $table->string('name', 100);
-            $table->string('address', 150)->nullable();
             $table->string('license_plate', 15);
             $table->string('phone_no', 20);
-            $table->boolean('member')->default(0);
+            $table->string('address', 150)->nullable();
             $table->foreignId('created_by')
                 ->nullable()
                 ->constrained('users', indexName: 'customers_created_by')

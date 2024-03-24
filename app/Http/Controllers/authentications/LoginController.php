@@ -5,9 +5,8 @@ namespace App\Http\Controllers\authentications;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
-class AuthController extends Controller
+class LoginController extends Controller
 {
   public function index()
   {
@@ -17,14 +16,19 @@ class AuthController extends Controller
 
   public function login(Request $request)
   {
+    $request->validate([
+      'username' => 'required',
+      'password' => 'required',
+    ]);
+
     $credentials = $request->only('username', 'password');
-    Log::error($credentials);
 
     if (Auth::attempt($credentials)) {
-      Log::error('masok');
       return redirect()->route('dashboard');
     }
 
-    return redirect()->back()->with('error', 'Username atau Password Salah!');
+    return redirect()->back()
+      ->withInput($request->only('username'))
+      ->with('error', 'Username atau Password Anda Salah!',);
   }
 }

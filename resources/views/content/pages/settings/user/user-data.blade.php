@@ -4,7 +4,7 @@
 
 @extends('layouts/layoutMaster')
 
-@section('title', 'Pelanggan')
+@section('title', 'User')
 
 <!-- Vendor Styles -->
 @section('vendor-style')
@@ -18,20 +18,20 @@
 
 <!-- Page Scripts -->
 @section('page-script')
-  @vite(['resources/assets/js/custom/customer-data.js'])
+  @vite(['resources/assets/js/custom/user-data.js'])
 @endsection
 
 @section('content')
   <div class="d-flex align-items-center mb-3">
-    <h3 class="mb-0">Pelanggan</h3>
+    <h3 class="mb-0">User</h3>
     <h2 class="mb-0 mx-3">|</h2>
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb mb-0">
         <li class="breadcrumb-item">
-          <a class="text-secondary" href="javascript:void(0)">Master</a>
+          <a class="text-secondary" href="javascript:void(0)">Pengaturan</a>
         </li>
         <li class="breadcrumb-item">
-          <a href="{{ route('master-customer.index') }}">Data Pelanggan</a>
+          <a href="{{ route('settings-user.index') }}">Data User</a>
         </li>
       </ol>
     </nav>
@@ -41,23 +41,19 @@
       <div class="d-flex align-items-center">
         <i class="ti ti-filter ti-lg me-2"></i>
         <h4 class="card-title my-auto">
-          Filter Pelanggan
+          Filter User
         </h4>
       </div>
     </div>
     <div class="card-body">
       <div class="row">
         <div class="col-lg-4 mb-4">
+          <label class="form-label" for="username">Username</label>
+          <input class="form-control dt-input" id="username" data-column="2" placeholder="Username" />
+        </div>
+        <div class="col-lg-4 mb-4">
           <label class="form-label" for="name">Nama</label>
-          <input class="form-control dt-input" id="name" data-column="2" placeholder="Nama Pelanggan" />
-        </div>
-        <div class="col-lg-4 mb-4">
-          <label class="form-label" for="license_plate">No. Plat</label>
-          <input class="form-control dt-input" id="license_plate" data-column="3" placeholder="No. Plat Pelanggan" />
-        </div>
-        <div class="col-lg-4 mb-4">
-          <label class="form-label" for="phone_no">No. Telepon</label>
-          <input class="form-control dt-input" id="phone_no" data-column="4" placeholder="No. Telepon Pelanggan" />
+          <input class="form-control dt-input" id="name" data-column="3" placeholder="Nama User" />
         </div>
       </div>
     </div>
@@ -76,15 +72,15 @@
 
   <div class="card">
     <div class="table-responsive">
-      <table class="table table-bordered table-striped table-hover" id="customer-datatable">
+      <table class="table table-bordered table-striped table-hover" id="user-datatable">
         <thead style="background: #8f8da852">
           <tr>
             <th class="text-center" style="max-width: 50px">Aksi</th>
-            <th style="max-width: 80px">Kode</th>
-            <th>Nama</th> <!-- 2 -->
-            <th>No. Plat</th> <!-- 3 -->
-            <th>No. Telepon</th> <!-- 4 -->
-            <th>Alamat</th>
+            <th>Id</th>
+            <th>Username</th> <!-- 2 -->
+            <th>Nama</th> <!-- 3 -->
+            <th>Role</th>
+            <th>Status Akun</th>
           </tr>
         </thead>
       </table>

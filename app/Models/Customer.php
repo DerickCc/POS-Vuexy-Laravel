@@ -21,6 +21,17 @@ class Customer extends Model
         'updated_by',
     ];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        // generate unique code
+        static::created(function ($customer) {
+            $customer->code = 'CUS' . str_pad($customer->id, 7, '0', STR_PAD_LEFT);
+            $customer->save();
+        });
+    }
+
     function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');

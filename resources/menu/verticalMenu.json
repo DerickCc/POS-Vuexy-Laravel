@@ -29,7 +29,7 @@
             "icon": "menu-icon tf-icons ti ti-building-warehouse",
             "submenu": [
                 {
-                    "url": "/product",
+                    "url": "/inventory/product",
                     "name": "Data Barang",
                     "slug": "inventory-product"
                 }
@@ -75,7 +75,7 @@
             "icon": "menu-icon tf-icons ti ti-settings",
             "submenu": [
                 {
-                    "url": "/user",
+                    "url": "/settings/user",
                     "name": "Data User",
                     "slug": "settings-user"
                 }

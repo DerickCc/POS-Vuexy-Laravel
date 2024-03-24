@@ -4,7 +4,7 @@
 
 @extends('layouts/layoutMaster')
 
-@section('title', 'Login')
+@section('title', 'Register Basic - Pages')
 
 @section('vendor-style')
   @vite(['resources/assets/vendor/libs/@form-validation/form-validation.scss'])
@@ -19,35 +19,27 @@
 @endsection
 
 @section('page-script')
-  @vite(['resources/assets/js/custom/login.js'])
+  @vite(['resources/assets/js/pages-auth.js'])
 @endsection
 
 @section('content')
   <div class="container-xxl">
     <div class="authentication-wrapper authentication-basic container-p-y">
       <div class="authentication-inner py-4">
+
+        <!-- Register Card -->
         <div class="card">
           <div class="card-body">
             <!-- Logo -->
-            <div class="app-brand justify-content-center mb-3 mt-1">
-              <h2 class="app-brand-link gap-2">
+            <div class="app-brand justify-content-center mb-4 mt-2">
+              <a class="app-brand-link gap-2" href="{{ url('/') }}">
                 <span class="app-brand-logo demo">@include('_partials.macros', ['height' => 20, 'withbg' => 'fill: #fff;'])</span>
-                <span class="fw-bold ms-1">POS</span>
-              </h2>
+                <span class="app-brand-text demo text-body fw-bold ms-1">{{ config('variables.templateName') }}</span>
+              </a>
             </div>
             <!-- /Logo -->
-            @if (session('error'))
-              <div class="alert alert-danger">
-                {{ session('error') }}
-              </div>
-            @endif
-            @if (session('success'))
-              <div class="alert alert-success">
-                {{ session('success') }}
-              </div>
-            @endif
 
-            <form class="mb-3" id="formAuthentication" action="{{ route('login') }}" method="POST">
+            <form class="mb-3" id="formAuthentication" action="{{ route('register') }}" method="POST">
               @csrf
               <div class="mb-3">
                 <label class="form-label" for="username">Username</label>
@@ -55,9 +47,19 @@
                   class="form-control"
                   id="username"
                   name="username"
-                  value="{{ old('username') }}"
+                  type="text"
                   placeholder="Masukkan Username Anda"
                   autofocus
+                >
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="name">Nama</label>
+                <input
+                  class="form-control"
+                  id="name"
+                  name="name"
+                  type="text"
+                  placeholder="Masukkan Nama Anda"
                 >
               </div>
               <div class="mb-4 form-password-toggle">
@@ -74,12 +76,21 @@
                   <span class="input-group-text cursor-pointer"><i class="ti ti-eye-off"></i></span>
                 </div>
               </div>
-              <div class="mb-3">
-                <button class="btn btn-primary d-grid w-100" type="submit">Login</button>
-              </div>
+
+              <button class="btn btn-primary d-grid w-100">
+                Daftar
+              </button>
             </form>
+
+            <p class="text-center">
+              <span>Already have an account?</span>
+              <a href="{{ route('login') }}">
+                <span>Login</span>
+              </a>
+            </p>
           </div>
         </div>
+        <!-- Register Card -->
       </div>
     </div>
   </div>

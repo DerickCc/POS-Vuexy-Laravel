@@ -1,13 +1,15 @@
 <?php
 
-use App\Http\Controllers\authentications\AuthController;
+use App\Http\Controllers\authentications\LoginController;
+use App\Http\Controllers\authentications\LogoutController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\language\LanguageController;
 use App\Http\Controllers\pages\DashboardController;
 use App\Http\Controllers\pages\MiscError;
-use App\Http\Controllers\authentications\RegisterBasic;
+use App\Http\Controllers\authentications\RegisterController;
 use App\Http\Controllers\pages\CustomerController;
 use App\Http\Controllers\pages\SupplierController;
+use App\Http\Controllers\pages\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,29 +22,63 @@ use App\Http\Controllers\pages\SupplierController;
 |
 */
 
-// Main Page Route
-//----------------
-// Dashboard
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard'); // name utk slug ny menu
+Route::middleware(['auth'])->group(function () {
+  // Main Page Route
+  //----------------
+  // Dashboard
+  Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard'); // name utk slug ny menu
 
-// Supplier
-Route::get('/master/supplier', [SupplierController::class, 'index'])->name('master-supplier');
-Route::get('/master/supplier/get-data', [SupplierController::class, 'getData'])->name('master-supplier.getData');
-Route::get('/master/supplier/create', [SupplierController::class, 'create'])->name('master-supplier.detail');
-Route::post('/master/supplier/store', [SupplierController::class, 'store'])->name('master-supplier.store');
-Route::get('/master/supplier/{id}/edit', [SupplierController::class, 'edit'])->name('master-supplier.edit');
-Route::put('/master/supplier/{id}/update', [SupplierController::class, 'update'])->name('master-supplier.update');
-Route::delete('/master/supplier/{id}/delete', [SupplierController::class, 'delete'])->name('master-supplier.delete');
+  // Master
+  Route::prefix('/master')->group(function () {
+    // Supplier
+    Route::prefix('/supplier')->controller(SupplierController::class)->name('master-supplier.')->group(function () {
+      Route::get('/', 'index')->name('index');                  // '/master/supplier/'
+      Route::get('/get-data', 'getData')->name('getData');      // '/master/supplier/get-data'
+      Route::get('/create', 'create')->name('create');          // '/master/supplier/create'
+      Route::post('/store', 'store')->name('store');            // '/master/supplier/store'
+      Route::get('/{id}/edit', 'edit')->name('edit');           // '/master/supplier/{id}/edit'
+      Route::put('/{id}/update', 'update')->name('update');     // '/master/supplier/{id}/update'
+      Route::delete('/{id}/delete', 'delete')->name('delete');  // '/master/supplier/{id}/delete'
+    });
+    
+    // Customer
+    Route::prefix('/customer')->controller(CustomerController::class)->name('master-customer.')->group(function () {
+      Route::get('/', 'index')->name('index');                  // '/master/customer/'
+      Route::get('/get-data', 'getData')->name('getData');      // '/master/customer/get-data'
+      Route::get('/create', 'create')->name('create');          // '/master/customer/create'
+      Route::post('/store', 'store')->name('store');            // '/master/customer/store'
+      Route::get('/{id}/edit', 'edit')->name('edit');           // '/master/customer/{id}/edit'
+      Route::put('/{id}/update', 'update')->name('update');     // '/master/customer/{id}/update'
+      Route::delete('/{id}/delete', 'delete')->name('delete');  // '/master/customer/{id}/delete'
+    });
+  });
 
-// Customer
-Route::get('/master/customer', [CustomerController::class, 'index'])->name('master-customer');
+  // Settings
+  Route::prefix('/settings')->group(function () {
+    // User
+    Route::prefix('/user')->controller(UserController::class)->name('settings-user.')->group(function () {
+      Route::get('/', 'index')->name('index');                  // '/settings/user/'
+      Route::get('/get-data', 'getData')->name('getData');      // '/settings/user/get-data'
+      Route::get('/create', 'create')->name('create');          // '/settings/user/create'
+      Route::post('/store', 'store')->name('store');            // '/settings/user/store'
+      Route::get('/{id}/edit', 'edit')->name('edit');           // '/settings/user/{id}/edit'
+      Route::put('/{id}/update', 'update')->name('update');     // '/settings/user/{id}/update'
+      Route::post('/{id}/change-password', 'changePassword')->name('changePassword');  // '/settings/user/{id}/delete'
+    });
+  });
 
-// locale
-Route::get('lang/{locale}', [LanguageController::class, 'swap']);
+  // // locale
+  // Route::get('lang/{locale}', [LanguageController::class, 'swap']);
+});
 
-// pages
+// Page Error or Not Found
 Route::get('/pages/misc-error', [MiscError::class, 'index'])->name('pages-misc-error');
 
 // authentication
-Route::get('/login', [AuthController::class, 'index'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
+Route::get('/login', [LoginController::class, 'index'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
+
+Route::get('/register', [RegisterController::class, 'index'])->name('register');
+Route::post('/register', [RegisterController::class, 'register']);
+
+Route::post('/logout', [LogoutController::class, 'index'])->name('logout');

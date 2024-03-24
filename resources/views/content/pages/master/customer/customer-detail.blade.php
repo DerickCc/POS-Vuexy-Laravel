@@ -4,11 +4,11 @@
 
 @extends('layouts/layoutMaster')
 
-@section('title', 'Supplier')
+@section('title', 'Pelanggan')
 
 @section('content')
   <div class="d-flex align-items-center mb-3">
-    <h3 class="mb-0">Supplier</h3>
+    <h3 class="mb-0">Pelanggan</h3>
     <h2 class="mb-0 mx-3">|</h2>
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb mb-0">
@@ -16,10 +16,10 @@
           <a class="text-secondary" href="javascript:void(0)">Master</a>
         </li>
         <li class="breadcrumb-item">
-          <a href="{{ route('master-supplier.index') }}">Data Supplier</a>
+          <a href="{{ route('master-customer.index') }}">Data Pelanggan</a>
         </li>
         <li class="breadcrumb-item">
-          <a class="text-secondary" href="javascript:void(0)">{{ isset($edit) ? 'Edit' : 'Tambah' }} Supplier</a>
+          <a class="text-secondary" href="javascript:void(0)">{{ isset($edit) ? 'Edit' : 'Tambah' }} Pelanggan</a>
         </li>
       </ol>
     </nav>
@@ -27,7 +27,7 @@
   <div class="card">
     <div class="card-header d-flex align-items-center">
       <i class="ti ti-pencil-plus ti-lg me-2"></i>
-      <h4 class="card-title my-auto">{{ isset($edit) ? 'Edit' : 'Tambah' }} Supplier</h4>
+      <h4 class="card-title my-auto">{{ isset($edit) ? 'Edit' : 'Tambah' }} Pelanggan</h4>
     </div>
     @if (session('error'))
       <div class="alert alert-danger">
@@ -35,8 +35,8 @@
       </div>
     @endif
     <div class="card-body">
-      <form id="supplierForm"
-        action="{{ isset($edit) ? route('master-supplier.update', $edit->id) : route('master-supplier.store') }}"
+      <form id="customerForm"
+        action="{{ isset($edit) ? route('master-customer.update', $edit->id) : route('master-customer.store') }}"
         method="POST"
       >
         @if (isset($edit))
@@ -52,7 +52,7 @@
               name="name"
               type="text"
               value="{{ old('name', $edit->name ?? '') }}"
-              placeholder="Nama Supplier"
+              placeholder="Nama Pelanggan"
             />
             <div class="invalid-feedback">
               @error('name')
@@ -62,17 +62,17 @@
           </div>
 
           <div class="col-lg-4">
-            <label class="form-label required" for="pic">PIC</label>
+            <label class="form-label required" for="license_plate">No. Plat</label>
             <input
-              class="form-control @error('pic') is-invalid @enderror"
-              id="pic"
-              name="pic"
+              class="form-control @error('license_plate') is-invalid @enderror"
+              id="license_plate"
+              name="license_plate"
               type="text"
-              value="{{ old('pic', $edit->pic ?? '') }}"
-              placeholder="PIC Supplier"
+              value="{{ old('license_plate', $edit->license_plate ?? '') }}"
+              placeholder="No. Plat Pelanggan"
             />
             <div class="invalid-feedback">
-              @error('pic')
+              @error('license_plate')
                 {{ $message }}
               @enderror
             </div>
@@ -85,8 +85,8 @@
               id="phone_no"
               name="phone_no"
               type="text"
-              value="{{ old('phoneNo', $edit->phone_no ?? '') }}"
-              placeholder="No. Telepon Supplier"
+              value="{{ old('phone_no', $edit->phone_no ?? '') }}"
+              placeholder="No. Telepon Pelanggan"
             />
             <div class="invalid-feedback">
               @error('phone_no')
@@ -95,14 +95,14 @@
             </div>
           </div>
 
-          <div class="col-lg-6">
-            <label class="form-label" for="address">Alamat</label>
+          <div class="col-lg-12">
+            <label class="form-label required" for="address">Alamat</label>
             <textarea
               class="form-control @error('address') is-invalid @enderror"
               id="address"
               name="address"
-              placeholder="Alamat Supplier"
-              rows="4"
+              placeholder="Alamat Pelanggan"
+              rows="5"
             >{{ old('address', $edit->address ?? '') }}</textarea>
             <div class="invalid-feedback">
               @error('address')
@@ -111,26 +111,10 @@
             </div>
           </div>
 
-          <div class="col-lg-6">
-            <label class="form-label" for="remarks">Keterangan</label>
-            <textarea
-              class="form-control @error('remarks') is-invalid @enderror"
-              id="remarks"
-              name="remarks"
-              placeholder="Keterangan Tambahan"
-              rows="4"
-            >{{ old('remarks', $edit->remarks ?? '') }}</textarea>
-            <div class="invalid-feedback">
-              @error('remarks')
-                {{ $message }}
-              @enderror
-            </div>
-          </div>
-
         </div>
         <div class="row mt-4">
           <div class="col-12">
-            <a class="btn btn-outline-primary float-start" href="{{ route('master-supplier.index') }}">Kembali</a>
+            <a class="btn btn-outline-primary float-start" href="{{ route('master-customer.index') }}">Kembali</a>
             <button class="btn btn-success float-end" id="submitBtn" type="submit">Simpan</button>
           </div>
         </div>

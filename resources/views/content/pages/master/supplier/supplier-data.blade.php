@@ -8,17 +8,17 @@
 
 <!-- Vendor Styles -->
 @section('vendor-style')
-  @vite(['resources/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.scss', 'resources/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.scss', 'resources/assets/vendor/libs/flatpickr/flatpickr.scss'])
+  @vite(['resources/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.scss', 'resources/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.scss'])
 @endsection
 
 <!-- Vendor Scripts -->
 @section('vendor-script')
-  @vite(['resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js', 'resources/assets/vendor/libs/moment/moment.js', 'resources/assets/vendor/libs/flatpickr/flatpickr.js'])
+  @vite(['resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js'])
 @endsection
 
 <!-- Page Scripts -->
 @section('page-script')
-  @vite(['resources/assets/js/supplier-data.js'])
+  @vite(['resources/assets/js/custom/supplier-data.js'])
 @endsection
 
 @section('content')
@@ -31,7 +31,7 @@
           <a class="text-secondary" href="javascript:void(0)">Master</a>
         </li>
         <li class="breadcrumb-item">
-          <a href="{{ route('master-supplier') }}">Data Supplier</a>
+          <a href="{{ route('master-supplier.index') }}">Data Supplier</a>
         </li>
       </ol>
     </nav>
