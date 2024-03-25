@@ -41,12 +41,12 @@
             "icon": "menu-icon tf-icons ti ti-receipt",
             "submenu": [
                 {
-                    "url": "/purchase-order",
+                    "url": "/transaction/purchase-order",
                     "name": "Transaksi Pembelian",
                     "slug": "transaction-purchase-order"
                 },
                 {
-                    "url": "/sales-order",
+                    "url": "/transaction/sales-order",
                     "name": "Transaksi Penjualan",
                     "slug": "transaction-sales-order"
                 }
@@ -58,12 +58,12 @@
             "icon": "menu-icon tf-icons ti ti-file",
             "submenu": [
                 {
-                    "url": "/purchase-report",
+                    "url": "/report/purchase-report",
                     "name": "Laporan Pembelian",
                     "slug": "report-purchase-report"
                 },
                 {
-                    "url": "/sales-report",
+                    "url": "/report/sales-report",
                     "name": "Laporan Penjualan",
                     "slug": "report-sales-report"
                 }

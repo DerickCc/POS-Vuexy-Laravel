@@ -35,8 +35,9 @@ class UserController extends Controller
                         <a href="' . route('settings-user.edit', $data->id) . '">
                             <i class="ti ti-edit ti-sm text-warning me-2"></i>
                         </a>
-                        <a href="' . route('settings-user.changePassword', $data->id) . '" onclick="confirmDelete(event, \'#customer-datatable\')">
-                            <i class="ti ti-key ti-sm text-info"></i>
+                        <a href="' . route('settings-user.change-account-status', $data->id) . '
+                            "onclick="confirmChangeStatus(event, \'#user-datatable\')">
+                            <i class="ti ti-refresh ti-sm text-info"></i>
                         </a>
                     </div>
                     ';
@@ -129,6 +130,7 @@ class UserController extends Controller
                 $user->update([
                     'username' => $data['username'],
                     'name' => $data['name'],
+                    'password' => bcrypt($data['password']),
                     'role' => $data['role'],
                     'account_status' => $data['account_status'],
                 ]);
@@ -145,14 +147,19 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function changePassword(int $id)
+    public function changeAccountStatus(int $id)
     {
         try {
             DB::transaction(function () use ($id) {
-                $user = User::findOrDail($id);
+                $user = User::findOrFail($id);
+                if (!$user) abort(404);
+
+                $user->update([
+                    'account_status' => !($user->account_status)
+                ]);
             });
         } catch (\Exception $e) {
-            Log::error('Gagal Meng:' . $e->getMessage());
+            Log::error('Gagal Mengupdate Data:' . $e->getMessage());
         }
     }
 }

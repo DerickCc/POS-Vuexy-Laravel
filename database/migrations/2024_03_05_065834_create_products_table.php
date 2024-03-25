@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('uom', 50);
             $table->integer('purchase_price');
             $table->integer('selling_price');
-            $table->integer('member_price');
             $table->string('remarks', 150)->nullable();
             $table->foreignId('created_by')
                 ->nullable()

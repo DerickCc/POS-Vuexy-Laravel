@@ -18,11 +18,21 @@ class Product extends Model
         'uom',
         'purchase_price',
         'selling_price',
-        'member_price',
         'remarks',
         'created_by',
         'updated_by',
     ];
+
+    public static function boot()
+    {
+        parent::boot();
+
+        // generate unique code after product is created
+        static::created(function ($product) {
+            $product->code = 'PRD' . str_pad($product->id, 7, '0', STR_PAD_LEFT);
+            $product->save();
+        });
+    }
 
     function createdBy(): BelongsTo
     {

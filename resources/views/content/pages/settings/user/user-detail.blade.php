@@ -88,6 +88,43 @@
             </div>
           </div>
 
+          <div class="col-lg-6 form-password-toggle">
+            <label class="form-label required" for="password">Password</label>
+            <div class="input-group input-group-merge">
+              <input
+                class="form-control"
+                id="password"
+                name="password"
+                type="password"
+                placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+              />
+              <span class="input-group-text cursor-pointer">
+                <i class="ti ti-eye-off"></i>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-lg-6 form-password-toggle">
+            <label class="form-label required" for="confirm_password">Konfirmasi Password</label>
+            <div class="input-group input-group-merge">
+              <input
+                class="form-control"
+                id="confirm_password"
+                name="confirm_password"
+                type="password"
+                placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+              />
+              <span class="input-group-text cursor-pointer">
+                <i class="ti ti-eye-off"></i>
+              </span>
+            </div>
+            <div class="invalid-feedback">
+              @error('confirm_password')
+                {{ $message }}
+              @enderror
+            </div>
+          </div>
+
           <div class="col-lg-6">
             <label class="form-label required" for="role">Role</label>
             <select class="selectpicker w-100" id="role" name="role" data-style="btn-default">
@@ -99,50 +136,12 @@
           <div class="col-lg-6">
             <label class="form-label required" for="account_status">Status Akun</label>
             <select class="selectpicker w-100" id="account_status" name="account_status" data-style="btn-default">
-              <option value="1" {{ isset($edit) ? ($edit->account_status == 1 ? 'selected' : '') : '' }}>Aktif</option>
-              <option value="0" {{ isset($edit) ? ($edit->account_status == 0 ? 'selected' : '') : '' }}>Tidak Aktif</option>
+              <option value="1" {{ isset($edit) ? ($edit->account_status == 1 ? 'selected' : '') : '' }}>Aktif
+              </option>
+              <option value="0" {{ isset($edit) ? ($edit->account_status == 0 ? 'selected' : '') : '' }}>Tidak Aktif
+              </option>
             </select>
           </div>
-
-          {{-- if add user --}}
-          @if (!isset($edit))
-            <div class="col-lg-6 form-password-toggle">
-              <label class="form-label required" for="password">Password</label>
-              <div class="input-group input-group-merge">
-                <input
-                  class="form-control"
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                />
-                <span class="input-group-text cursor-pointer">
-                  <i class="ti ti-eye-off"></i>
-                </span>
-              </div>
-            </div>
-
-            <div class="col-lg-6 form-password-toggle">
-              <label class="form-label required" for="confirm_password">Konfirmasi Password</label>
-              <div class="input-group input-group-merge">
-                <input
-                  class="form-control"
-                  id="confirm_password"
-                  name="confirm_password"
-                  type="password"
-                  placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                />
-                <span class="input-group-text cursor-pointer">
-                  <i class="ti ti-eye-off"></i>
-                </span>
-              </div>
-              <div class="invalid-feedback">
-                @error('confirm_password')
-                  {{ $message }}
-                @enderror
-              </div>
-            </div>
-          @endif
         </div>
         <div class="row mt-4">
           <div class="col-12">

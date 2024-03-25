@@ -4,7 +4,7 @@
 
 @extends('layouts/layoutMaster')
 
-@section('title', 'Pelanggan')
+@section('title', 'Barang')
 
 <!-- Vendor Styles -->
 @section('vendor-style')
@@ -18,12 +18,12 @@
 
 <!-- Page Scripts -->
 @section('page-script')
-  @vite(['resources/assets/js/custom/customer-data.js'])
+  @vite(['resources/assets/js/custom/product-data.js'])
 @endsection
 
 @section('content')
   <div class="d-flex align-items-center mb-3">
-    <h3 class="mb-0">Pelanggan</h3>
+    <h3 class="mb-0">Barang</h3>
     <h2 class="mb-0 mx-3">|</h2>
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb mb-0">
@@ -31,7 +31,7 @@
           <a class="text-secondary" href="javascript:void(0)">Master</a>
         </li>
         <li class="breadcrumb-item">
-          <a href="{{ route('master-customer.index') }}">Data Pelanggan</a>
+          <a href="{{ route('inventory-product.index') }}">Data Barang</a>
         </li>
       </ol>
     </nav>
@@ -41,7 +41,7 @@
       <div class="d-flex align-items-center">
         <i class="ti ti-filter ti-lg me-2"></i>
         <h4 class="card-title my-auto">
-          Filter Pelanggan
+          Filter Barang
         </h4>
       </div>
     </div>
@@ -76,15 +76,18 @@
 
   <div class="card">
     <div class="table-responsive">
-      <table class="table table-bordered table-hover" id="customer-datatable">
+      <table class="table table-hover" id="product-datatable">
         <thead style="background: #8f8da852">
           <tr>
             <th class="text-center" style="max-width: 50px">Aksi</th>
-            <th style="max-width: 80px">Kode</th>
-            <th>Nama</th> <!-- 2 -->
-            <th>No. Plat</th> <!-- 3 -->
-            <th>No. Telepon</th> <!-- 4 -->
-            <th>Alamat</th>
+            <th>Id</th>
+            <th style="max-width: 100px">Foto</th>
+            <th>Nama Barang</th> <!-- 3 -->
+            <th>Stok</th> <!-- 4 -->
+            <th>Satuan</th> <!-- 5 -->
+            <th>Harga Beli</th>
+            <th>Harga Jual</th>
+            <th>Keterangan</th>
           </tr>
         </thead>
       </table>

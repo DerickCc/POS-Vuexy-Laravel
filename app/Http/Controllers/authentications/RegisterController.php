@@ -21,7 +21,7 @@ class RegisterController extends Controller
       'username' => $request['username'],
       'name' => $request['name'],
       'password' => bcrypt($request['password']),
-      'role' => 'superadmin'
+      'role' => 'Admin'
     ]);
 
     if (!$user) {

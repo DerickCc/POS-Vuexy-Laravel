@@ -47,11 +47,11 @@
     </div>
     <div class="card-body">
       <div class="row">
-        <div class="col-lg-4 mb-4">
+        <div class="col-md-4 mb-4">
           <label class="form-label" for="username">Username</label>
           <input class="form-control dt-input" id="username" data-column="2" placeholder="Username" />
         </div>
-        <div class="col-lg-4 mb-4">
+        <div class="col-md-4 mb-4">
           <label class="form-label" for="name">Nama</label>
           <input class="form-control dt-input" id="name" data-column="3" placeholder="Nama User" />
         </div>
@@ -72,7 +72,7 @@
 
   <div class="card">
     <div class="table-responsive">
-      <table class="table table-bordered table-striped table-hover" id="user-datatable">
+      <table class="table table-bordered table-hover" id="user-datatable">
         <thead style="background: #8f8da852">
           <tr>
             <th class="text-center" style="max-width: 50px">Aksi</th>
@@ -80,10 +80,80 @@
             <th>Username</th> <!-- 2 -->
             <th>Nama</th> <!-- 3 -->
             <th>Role</th>
-            <th>Status Akun</th>
+            <th style="max-width: 200px">Status Akun</th>
           </tr>
         </thead>
       </table>
     </div>
   </div>
 @endsection
+
+<script type="text/javascript">
+  function confirmChangeStatus(event, tableId) {
+    event.preventDefault();
+    const action = event.currentTarget.getAttribute('href');
+    const csrf_token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    Swal.fire({
+      title: 'Apakah Anda yakin?',
+      text: 'Perubahan Status Akun akan berpengaruh pada user!',
+      icon: 'warning',
+      confirmButtonText: 'Ya, ubah!',
+      customClass: {
+        confirmButton: 'btn btn-danger me-3 waves-effect waves-light',
+        cancelButton: 'btn btn-label-secondary waves-effect waves-light'
+      }
+    }).then(confirm => {
+      // if user choose yes
+      if (confirm.isConfirmed) {
+        fetch(action, {
+            method: 'PUT',
+            headers: {
+              'X-CSRF-TOKEN': csrf_token
+            }
+          })
+          .then(res => {
+            if (res.ok) {
+              Swal.fire({
+                title: 'Success',
+                text: 'Status Akun Berhasil Diubah',
+                icon: 'success',
+                customClass: {
+                  confirmButton: 'btn btn-primary me waves-effect waves-light'
+                }
+              });
+
+              // refresh table after successful delete
+              var table = $(tableId).DataTable();
+              const pageInfo = table.page.info();
+              const searchValue = table.search();
+
+              table.ajax.reload(function() {
+                // restore previous filter, search
+                table.page(pageInfo.page).draw(false);
+                table.search(searchValue).draw(false);
+              });
+            } else
+              Swal.fire({
+                title: 'Error',
+                text: 'Status Akun Gagal Diubah',
+                icon: 'error',
+                customClass: {
+                  confirmButton: 'btn btn-primary me waves-effect waves-light'
+                }
+              });
+          })
+          .catch(e => {
+            Swal.fire({
+              title: 'Error',
+              text: e,
+              icon: 'error',
+              customClass: {
+                confirmButton: 'btn btn-primary me waves-effect waves-light'
+              }
+            });
+          });
+      }
+    });
+  }
+</script>

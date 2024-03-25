@@ -8,6 +8,7 @@ use App\Http\Controllers\pages\DashboardController;
 use App\Http\Controllers\pages\MiscError;
 use App\Http\Controllers\authentications\RegisterController;
 use App\Http\Controllers\pages\CustomerController;
+use App\Http\Controllers\pages\ProductController;
 use App\Http\Controllers\pages\SupplierController;
 use App\Http\Controllers\pages\UserController;
 
@@ -33,7 +34,7 @@ Route::middleware(['auth'])->group(function () {
     // Supplier
     Route::prefix('/supplier')->controller(SupplierController::class)->name('master-supplier.')->group(function () {
       Route::get('/', 'index')->name('index');                  // '/master/supplier/'
-      Route::get('/get-data', 'getData')->name('getData');      // '/master/supplier/get-data'
+      Route::get('/get-data', 'getData')->name('get-data');     // '/master/supplier/get-data'
       Route::get('/create', 'create')->name('create');          // '/master/supplier/create'
       Route::post('/store', 'store')->name('store');            // '/master/supplier/store'
       Route::get('/{id}/edit', 'edit')->name('edit');           // '/master/supplier/{id}/edit'
@@ -44,7 +45,7 @@ Route::middleware(['auth'])->group(function () {
     // Customer
     Route::prefix('/customer')->controller(CustomerController::class)->name('master-customer.')->group(function () {
       Route::get('/', 'index')->name('index');                  // '/master/customer/'
-      Route::get('/get-data', 'getData')->name('getData');      // '/master/customer/get-data'
+      Route::get('/get-data', 'getData')->name('get-data');     // '/master/customer/get-data'
       Route::get('/create', 'create')->name('create');          // '/master/customer/create'
       Route::post('/store', 'store')->name('store');            // '/master/customer/store'
       Route::get('/{id}/edit', 'edit')->name('edit');           // '/master/customer/{id}/edit'
@@ -53,17 +54,31 @@ Route::middleware(['auth'])->group(function () {
     });
   });
 
+  // Inventory
+  Route::prefix('/inventory')->group(function () {
+    // Product
+    Route::prefix('/product')->controller(ProductController::class)->name('inventory-product.')->group(function () {
+      Route::get('/', 'index')->name('index');                  // '/inventory-product/'
+      Route::get('/get-data', 'getData')->name('get-data');     // '/inventory-product/get-data'
+      Route::get('/create', 'create')->name('create');          // '/inventory-product/create'
+      Route::post('/store', 'store')->name('store');            // '/inventory-product/store'
+      Route::get('/{id}/edit', 'edit')->name('edit');           // '/inventory-product/{id}/edit'
+      Route::put('/{id}/update', 'update')->name('update');     // '/inventory-product/{id}/update'
+      Route::delete('/{id}/delete', 'delete')->name('delete');  // '/inventory-product/{id}/delete'
+    });
+  });
+
   // Settings
   Route::prefix('/settings')->group(function () {
     // User
     Route::prefix('/user')->controller(UserController::class)->name('settings-user.')->group(function () {
       Route::get('/', 'index')->name('index');                  // '/settings/user/'
-      Route::get('/get-data', 'getData')->name('getData');      // '/settings/user/get-data'
+      Route::get('/get-data', 'getData')->name('get-data');     // '/settings/user/get-data'
       Route::get('/create', 'create')->name('create');          // '/settings/user/create'
       Route::post('/store', 'store')->name('store');            // '/settings/user/store'
       Route::get('/{id}/edit', 'edit')->name('edit');           // '/settings/user/{id}/edit'
       Route::put('/{id}/update', 'update')->name('update');     // '/settings/user/{id}/update'
-      Route::post('/{id}/change-password', 'changePassword')->name('changePassword');  // '/settings/user/{id}/delete'
+      Route::put('/{id}/change-account-status', 'changeAccountStatus')->name('change-account-status');  // '/settings/user/{id}/change-account-status'
     });
   });
 
