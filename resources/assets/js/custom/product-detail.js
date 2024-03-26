@@ -1,16 +1,16 @@
-// if ($('#purchase_price')) {
-//   new Cleave($('#purchase_price'), {
-//     numeral: true,
-//     numeralThousandsGroupStyle: 'thousand'
-//   });
-// };
+if ($('#purchase_price')) {
+  new Cleave($('#purchase_price'), {
+    numeral: true,
+    numeralThousandsGroupStyle: 'thousand'
+  });
+}
 
-// if ($('#selling_price')) {
-//   new Cleave($('#selling_price'), {
-//     numeral: true,
-//     numeralThousandsGroupStyle: 'thousand'
-//   });
-// }
+if ($('#selling_price')) {
+  new Cleave($('#selling_price'), {
+    numeral: true,
+    numeralThousandsGroupStyle: 'thousand'
+  });
+}
 
 // $('#productForm').on('submit', function() {
 //   var purchase_price = $('#purchase_price').val().replace(/,/g, '');

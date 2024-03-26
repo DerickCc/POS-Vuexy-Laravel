@@ -8,14 +8,7 @@
 
 <!-- Vendor Scripts -->
 @section('vendor-script')
-@vite([
-  'resources/assets/vendor/libs/cleavejs/cleave.js',
-])
-@endsection
-
-<!-- Page Scripts -->
-@section('page-script')
-  @vite(['resources/assets/js/custom/product-detail.js'])
+  @vite(['resources/assets/vendor/libs/cleavejs/cleave.js'])
 @endsection
 
 @section('content')
@@ -56,7 +49,7 @@
         @endif
         @csrf
         <div class="row g-4">
-          <div class="col-lg-4">
+          <div class="col-lg-3">
             <div class="row g-4">
               <div class="col-12">
                 <label class="form-label" for="photo">Foto Barang</label>
@@ -64,7 +57,7 @@
                   class="form-control @error('photo') is-invalid @enderror"
                   id="photo"
                   name="photo"
-                  type="text"
+                  type="file"
                   value="{{ old('photo', $edit->photo ?? '') }}"
                 />
                 <div class="invalid-feedback">
@@ -73,10 +66,15 @@
                   @enderror
                 </div>
               </div>
+              <div class="col-12 text-center">
+                <img class="img-fluid rounded" id="previewImage"
+                  src="{{ asset('assets/img/illustrations/image-placeholder.png') }}" style="width: 150px; height: 150px;"
+                >
+              </div>
             </div>
           </div>
 
-          <div class="col-lg-8">
+          <div class="col-lg-9">
             <div class="row g-4">
               <div class="col-12">
                 <label class="form-label required" for="name">Nama Barang</label>
@@ -134,9 +132,7 @@
                     class="form-control @error('purchase_price') is-invalid @enderror"
                     id="purchase_price"
                     name="purchase_price"
-                    type="number"
-                    min="0"
-                    step="100"
+                    type="text"
                     value="{{ old('purchase_price', $edit->purchase_price ?? 0) }}"
                     placeholder="Harga Beli"
                   />
@@ -155,9 +151,7 @@
                     class="form-control @error('selling_price') is-invalid @enderror"
                     id="selling_price"
                     name="selling_price"
-                    type="number"
-                    min="0"
-                    step="100"
+                    type="text"
                     value="{{ old('selling_price', $edit->selling_price ?? 0) }}"
                     placeholder="Harga Jual"
                   />
@@ -196,4 +190,9 @@
       </form>
     </div>
   </div>
+@endsection
+
+<!-- Page Scripts -->
+@section('page-script')
+  @vite(['resources/assets/js/custom/product-detail.js'])
 @endsection

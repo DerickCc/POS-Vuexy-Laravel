@@ -76,7 +76,7 @@
 
   <div class="card">
     <div class="table-responsive">
-      <table class="table table-bordered table-hover" id="customer-datatable">
+      <table class="table table-hover" id="customer-datatable">
         <thead style="background: #8f8da852">
           <tr>
             <th class="text-center" style="max-width: 50px">Aksi</th>
