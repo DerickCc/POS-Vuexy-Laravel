@@ -49,15 +49,15 @@
       <div class="row">
         <div class="col-lg-4 mb-4">
           <label class="form-label" for="name">Nama</label>
-          <input class="form-control dt-input" id="name" data-column="2" placeholder="Nama Pelanggan" />
+          <input class="form-control dt-input" id="name" data-column="2" placeholder="Nama Barang" />
         </div>
         <div class="col-lg-4 mb-4">
-          <label class="form-label" for="license_plate">No. Plat</label>
-          <input class="form-control dt-input" id="license_plate" data-column="3" placeholder="No. Plat Pelanggan" />
+          <label class="form-label" for="stock">Stok</label>
+          <input class="form-control dt-input" type="number" id="stock" data-column="3" placeholder="Stok Barang" />
         </div>
         <div class="col-lg-4 mb-4">
-          <label class="form-label" for="phone_no">No. Telepon</label>
-          <input class="form-control dt-input" id="phone_no" data-column="4" placeholder="No. Telepon Pelanggan" />
+          <label class="form-label" for="uom">Satuan</label>
+          <input class="form-control dt-input" id="uom" data-column="4" placeholder="Satuan Barang" />
         </div>
       </div>
     </div>

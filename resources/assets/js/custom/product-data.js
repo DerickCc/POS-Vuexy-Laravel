@@ -22,7 +22,7 @@ $(function () {
           return `
             <img
               style="max-width: 100px; min-width: 100px"
-              class="img-fluid rounded" 
+              class="img-fluid rounded"
               src="${data ? data : '../assets/img/illustrations/image-placeholder.png'}" />
           `;
         }

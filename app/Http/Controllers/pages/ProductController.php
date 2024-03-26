@@ -14,12 +14,12 @@ use Yajra\DataTables\Facades\DataTables;
 class ProductController extends Controller
 {
     protected $columns = [
-        'action', 
-        'id', 
-        'photo', 
-        'name', 
-        'stock', 
-        'uom', 
+        'action',
+        'id',
+        'photo',
+        'name',
+        'stock',
+        'uom',
         'purchase_price',
         'selling_price',
         'remarks'
@@ -116,6 +116,7 @@ class ProductController extends Controller
      */
     public function store(ProductRequest $request)
     {
+        Log::error($request);
         $data = $request->validated();
 
         try {

@@ -6,6 +6,18 @@
 
 @section('title', 'Barang')
 
+<!-- Vendor Scripts -->
+@section('vendor-script')
+@vite([
+  'resources/assets/vendor/libs/cleavejs/cleave.js',
+])
+@endsection
+
+<!-- Page Scripts -->
+@section('page-script')
+  @vite(['resources/assets/js/custom/product-detail.js'])
+@endsection
+
 @section('content')
   <div class="d-flex align-items-center mb-3">
     <h3 class="mb-0">Barang</h3>
@@ -116,34 +128,44 @@
               </div>
               <div class="col-6">
                 <label class="form-label required" for="purchase_price">Harga Beli</label>
-                <input
-                  class="form-control @error('purchase_price') is-invalid @enderror"
-                  id="purchase_price"
-                  name="purchase_price"
-                  type="number"
-                  value="{{ old('purchase_price', $edit->purchase_price ?? 0) }}"
-                  placeholder="Harga Beli"
-                />
-                <div class="invalid-feedback">
-                  @error('purchase_price')
-                    {{ $message }}
-                  @enderror
+                <div class="input-group">
+                  <span class="input-group-text">Rp</span>
+                  <input
+                    class="form-control @error('purchase_price') is-invalid @enderror"
+                    id="purchase_price"
+                    name="purchase_price"
+                    type="number"
+                    min="0"
+                    step="100"
+                    value="{{ old('purchase_price', $edit->purchase_price ?? 0) }}"
+                    placeholder="Harga Beli"
+                  />
+                  <div class="invalid-feedback">
+                    @error('purchase_price')
+                      {{ $message }}
+                    @enderror
+                  </div>
                 </div>
               </div>
               <div class="col-6">
                 <label class="form-label required" for="selling_price">Harga Jual</label>
-                <input
-                  class="form-control @error('selling_price') is-invalid @enderror"
-                  id="selling_price"
-                  name="selling_price"
-                  type="number"
-                  value="{{ old('selling_price', $edit->selling_price ?? 0) }}"
-                  placeholder="Harga Jual"
-                />
-                <div class="invalid-feedback">
-                  @error('selling_price')
-                    {{ $message }}
-                  @enderror
+                <div class="input-group">
+                  <span class="input-group-text">Rp</span>
+                  <input
+                    class="form-control @error('selling_price') is-invalid @enderror"
+                    id="selling_price"
+                    name="selling_price"
+                    type="number"
+                    min="0"
+                    step="100"
+                    value="{{ old('selling_price', $edit->selling_price ?? 0) }}"
+                    placeholder="Harga Jual"
+                  />
+                  <div class="invalid-feedback">
+                    @error('selling_price')
+                      {{ $message }}
+                    @enderror
+                  </div>
                 </div>
               </div>
             </div>
