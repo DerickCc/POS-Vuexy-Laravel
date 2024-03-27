@@ -146,7 +146,7 @@ class CustomerController extends Controller
 
         try {
             DB::transaction(function () use ($data, $id) {
-                $customer = Customer::where('id', $id)?->lockForUpdate();
+                $customer = Customer::where('id', $id)?->lockForUpdate()->first();
                 if (!$customer) abort(404);
 
                 $customer->update([
@@ -173,7 +173,7 @@ class CustomerController extends Controller
     {
         try {
             DB::transaction(function () use ($id){
-                $customer = Customer::findOrFail($id);
+                $customer = Customer::where('id', $id)?->lockForUpdate()->first();
                 $deleted = $customer->delete();
 
                 if (!$deleted) abort(500);

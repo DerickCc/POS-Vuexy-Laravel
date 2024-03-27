@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
 class ProductController extends Controller
@@ -90,6 +91,9 @@ class ProductController extends Controller
                         }
                     });
                 })
+                ->filterColumn('stock', function ($query, $keyword) {
+                    $query->where('stock', '<=', $keyword);
+                })
                 ->filterColumn('uom', function ($query, $keyword) {
                     $query->where('uom', 'like', '%' . $keyword . '%');
                 })
@@ -121,8 +125,9 @@ class ProductController extends Controller
 
         try {
             DB::transaction(function () use ($data) {
+                Log::error($data);
+
                 $product = Product::create([
-                    'photo' => $data['photo'],
                     'name' => $data['name'],
                     'stock' => $data['stock'],
                     'uom' => $data['uom'],
@@ -130,6 +135,11 @@ class ProductController extends Controller
                     'selling_price' => $data['selling_price'],
                     'remarks' => $data['remarks'],
                 ]);
+
+                if (isset($data['photo']) && $data['photo']->isValid()) {
+                  $photoPath = $data['photo']->storeAs('product-photo', $data['photo']->getClientOriginalName(), 'public');
+                  $product->photo = $photoPath;
+                }
 
                 $product->createdBy()->associate(Auth::user());
                 $product->updatedBy()->associate(Auth::user());
@@ -166,11 +176,10 @@ class ProductController extends Controller
 
         try {
             DB::transaction(function () use ($data, $id) {
-                $product = Product::where('id', $id)?->lockForUpdate();
+                $product = Product::where('id', $id)?->lockForUpdate()->first();
                 if (!$product) abort(404);
 
                 $product->update([
-                    'photo' => $data['photo'],
                     'name' => $data['name'],
                     'stock' => $data['stock'],
                     'uom' => $data['uom'],
@@ -178,6 +187,19 @@ class ProductController extends Controller
                     'selling_price' => $data['selling_price'],
                     'remarks' => $data['remarks'],
                 ]);
+
+                if (isset($data['photo']) && $data['photo']->isValid()) {
+                  $oldPhotoPath = $product['photo'];
+
+                  $photoPath = $data['photo']->storeAs('product-photo', $data['photo']->getClientOriginalName(), 'public');
+                  $product->update([
+                    'photo' => $photoPath
+                  ]);
+
+                  if ($oldPhotoPath) {
+                    Storage::disk('public')->delete($oldPhotoPath);
+                  }
+                }
             });
         }
         catch (\Exception $e) {
@@ -195,7 +217,7 @@ class ProductController extends Controller
     {
         try {
             DB::transaction(function () use ($id){
-                $product = Product::findOrFail($id);
+                $product = Product::where('id', $id)?->lockForUpdate()->first();
                 $deleted = $product->delete();
 
                 if (!$deleted) abort(500);

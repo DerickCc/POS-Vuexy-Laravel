@@ -127,7 +127,7 @@ class SupplierController extends Controller
 
                 $supplier->saveOrFail();
 
-                if (!$supplier) abort(500);       
+                if (!$supplier) abort(500);
             });
         } catch (\Exception $e) {
             Log::error('Gagal menambah Supplier: ' . $e->getMessage());
@@ -155,7 +155,7 @@ class SupplierController extends Controller
 
         try {
             DB::transaction(function () use ($data, $id) {
-                $supplier = Supplier::where('id', $id)?->lockForUpdate();
+                $supplier = Supplier::where('id', $id)?->lockForUpdate()->first();
                 if (!$supplier) abort(404);
 
                 $supplier->update([
@@ -182,7 +182,7 @@ class SupplierController extends Controller
     {
         try {
             DB::transaction(function () use ($id) {
-                $supplier = Supplier::findOrFail($id);
+                $supplier = Supplier::where('id', $id)?->lockForUpdate()->first();
                 $deleted = $supplier->delete();
 
                 if (!$deleted) abort(500);
