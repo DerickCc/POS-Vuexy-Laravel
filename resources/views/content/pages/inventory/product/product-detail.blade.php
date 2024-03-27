@@ -11,6 +11,11 @@
   @vite(['resources/assets/vendor/libs/cleavejs/cleave.js'])
 @endsection
 
+<!-- Page Scripts -->
+@section('page-script')
+  @vite(['resources/assets/js/custom/product-detail.js'])
+@endsection
+
 @section('content')
   <div class="d-flex align-items-center mb-3">
     <h3 class="mb-0">Barang</h3>
@@ -58,6 +63,7 @@
                   id="photo"
                   name="photo"
                   type="file"
+                  accept="image/png, image/jpeg, image/jpg, image/svg"
                   value="{{ old('photo', $edit->photo ?? '') }}"
                 />
                 <div class="invalid-feedback">
@@ -190,9 +196,4 @@
       </form>
     </div>
   </div>
-@endsection
-
-<!-- Page Scripts -->
-@section('page-script')
-  @vite(['resources/assets/js/custom/product-detail.js'])
 @endsection

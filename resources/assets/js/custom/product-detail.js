@@ -12,10 +12,14 @@ if ($('#selling_price')) {
   });
 }
 
-// $('#productForm').on('submit', function() {
-//   var purchase_price = $('#purchase_price').val().replace(/,/g, '');
-//   $('#purchase_price').value(purchase_price);
+$('#photo').on('change', function() {
+  if (this.files && this.files[0]) {
+    const reader = new FileReader();
 
-//   var selling_price = $('#selling_price').val().replace(/,/g, '');
-//   $('#selling_price').value(selling_price);
-// })
+    reader.onload = function(e) {
+      $('#previewImage').attr('src', e.target.result);
+    }
+
+    reader.readAsDataURL(this.files[0]);
+  }
+})
