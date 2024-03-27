@@ -50,7 +50,7 @@ class ProductController extends Controller
                         <a href="' . route('inventory-product.edit', $data->id) . '">
                             <i class="ti ti-edit ti-sm text-warning me-2"></i>
                         </a>
-                        <a href="' . route('inventory-product.delete', $data->id) . '" onclick="confirmDelete(event, \'#product-datatable\')">
+                        <a href="' . route('inventory-product.delete', $data->id) . '" onclick="confirmDelete(event, \'#productDatatable\')">
                             <i class="ti ti-trash ti-sm text-danger"></i>
                         </a>
                     </div>
@@ -92,7 +92,11 @@ class ProductController extends Controller
                     });
                 })
                 ->filterColumn('stock', function ($query, $keyword) {
-                    $query->where('stock', '<=', $keyword);
+                    $keys = explode(' ', $keyword);
+                    // check length
+                    if (count($keys) > 1) {
+                        $query->where('stock', $keys[0], $keys[1]);
+                    }
                 })
                 ->filterColumn('uom', function ($query, $keyword) {
                     $query->where('uom', 'like', '%' . $keyword . '%');
@@ -137,8 +141,8 @@ class ProductController extends Controller
                 ]);
 
                 if (isset($data['photo']) && $data['photo']->isValid()) {
-                  $photoPath = $data['photo']->storeAs('product-photo', $data['photo']->getClientOriginalName(), 'public');
-                  $product->photo = $photoPath;
+                    $photoPath = $data['photo']->storeAs('product-photo', $data['photo']->getClientOriginalName(), 'public');
+                    $product->photo = $photoPath;
                 }
 
                 $product->createdBy()->associate(Auth::user());
@@ -148,8 +152,7 @@ class ProductController extends Controller
 
                 if (!$product) abort(500);
             });
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             Log::error('Gagal menambah Product: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Data Gagal disimpan: ' . $e);
         }
@@ -189,20 +192,19 @@ class ProductController extends Controller
                 ]);
 
                 if (isset($data['photo']) && $data['photo']->isValid()) {
-                  $oldPhotoPath = $product['photo'];
+                    $oldPhotoPath = $product['photo'];
 
-                  $photoPath = $data['photo']->storeAs('product-photo', $data['photo']->getClientOriginalName(), 'public');
-                  $product->update([
-                    'photo' => $photoPath
-                  ]);
+                    $photoPath = $data['photo']->storeAs('product-photo', $data['photo']->getClientOriginalName(), 'public');
+                    $product->update([
+                        'photo' => $photoPath
+                    ]);
 
-                  if ($oldPhotoPath) {
-                    Storage::disk('public')->delete($oldPhotoPath);
-                  }
+                    if ($oldPhotoPath) {
+                        Storage::disk('public')->delete($oldPhotoPath);
+                    }
                 }
             });
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             Log::error('Gagal Mengupdate Product: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Data Gagal Diupdate ' . $e);
         }
@@ -216,14 +218,19 @@ class ProductController extends Controller
     public function delete(int $id)
     {
         try {
-            DB::transaction(function () use ($id){
+            DB::transaction(function () use ($id) {
                 $product = Product::where('id', $id)?->lockForUpdate()->first();
-                $deleted = $product->delete();
+                $oldPhotoPath = $product['photo'];
 
+                $deleted = $product->delete();
                 if (!$deleted) abort(500);
+
+                if ($oldPhotoPath) {
+                    Storage::disk('public')->delete($oldPhotoPath);
+                }
+
             });
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             Log::error('Gagal Menghapus Product: ' . $e->getMessage());
         }
     }

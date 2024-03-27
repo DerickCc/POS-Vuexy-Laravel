@@ -39,7 +39,7 @@ class CustomerController extends Controller
                         <a href="' . route('master-customer.edit', $data->id) . '">
                             <i class="ti ti-edit ti-sm text-warning me-2"></i>
                         </a>
-                        <a href="' . route('master-customer.delete', $data->id) . '" onclick="confirmDelete(event, \'#customer-datatable\')">
+                        <a href="' . route('master-customer.delete', $data->id) . '" onclick="confirmDelete(event, \'#customerDatatable\')">
                             <i class="ti ti-trash ti-sm text-danger"></i>
                         </a>
                     </div>

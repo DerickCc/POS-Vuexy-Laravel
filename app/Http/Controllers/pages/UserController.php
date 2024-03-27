@@ -36,7 +36,7 @@ class UserController extends Controller
                             <i class="ti ti-edit ti-sm text-warning me-2"></i>
                         </a>
                         <a href="' . route('settings-user.change-account-status', $data->id) . '
-                            "onclick="confirmChangeStatus(event, \'#user-datatable\')">
+                            "onclick="confirmChangeStatus(event, \'#userDatatable\')">
                             <i class="ti ti-refresh ti-sm text-info"></i>
                         </a>
                     </div>

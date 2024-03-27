@@ -41,7 +41,7 @@ class SupplierController extends Controller
                         <a href="' . route('master-supplier.edit', $data->id) . '">
                             <i class="ti ti-edit ti-sm text-warning me-2"></i>
                         </a>
-                        <a href="' . route('master-supplier.delete', $data->id) . '" onclick="confirmDelete(event, \'#supplier-datatable\')">
+                        <a href="' . route('master-supplier.delete', $data->id) . '" onclick="confirmDelete(event, \'#supplierDatatable\')">
                             <i class="ti ti-trash ti-sm text-danger"></i>
                         </a>
                     </div>';

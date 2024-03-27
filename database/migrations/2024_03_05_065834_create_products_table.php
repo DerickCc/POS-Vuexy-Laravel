@@ -47,7 +47,7 @@ return new class extends Migration
 
         // delete product-photo folder
         if (Storage::disk('public')->exists($productPhotoDirectory)) {
-            Storage::disk('public')->deleteDirectory($productPhotoDirectory);
+            Storage::disk('public')->delete($productPhotoDirectory);
         }
 
     }
