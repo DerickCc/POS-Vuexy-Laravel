@@ -47,6 +47,7 @@
     <div class="card-body">
       <form id="productForm"
         action="{{ isset($edit) ? route('inventory-product.update', $edit->id) : route('inventory-product.store') }}"
+        enctype="multipart/form-data"
         method="POST"
       >
         @if (isset($edit))
@@ -64,18 +65,20 @@
                   name="photo"
                   type="file"
                   accept="image/png, image/jpeg, image/jpg, image/svg"
-                  value="{{ old('photo', $edit->photo ?? '') }}"
+                  hidden
                 />
-                <div class="invalid-feedback">
-                  @error('photo')
-                    {{ $message }}
-                  @enderror
-                </div>
               </div>
               <div class="col-12 text-center">
-                <img class="img-fluid rounded" id="previewImage"
-                  src="{{ asset('assets/img/illustrations/image-placeholder.png') }}" style="width: 150px; height: 150px;"
-                >
+                  <img class="img-fluid rounded" id="previewImage"
+                    src="{{ isset($edit) && $edit->photo ? asset('storage/' . $edit->photo) : asset('assets/img/illustrations/image-placeholder.png') }}"
+                    style="width: 180px; height: 180px; cursor: pointer"
+                    onclick="document.getElementById('photo').click()"
+                  >
+                  <div class="invalid-feedback">
+                    @error('photo')
+                      {{ $message }}
+                    @enderror
+                  </div>
               </div>
             </div>
           </div>

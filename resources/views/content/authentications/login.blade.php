@@ -32,7 +32,7 @@
             <div class="app-brand justify-content-center mb-3 mt-1">
               <h2 class="app-brand-link gap-2">
                 <span class="app-brand-logo demo">@include('_partials.macros', ['height' => 20, 'withbg' => 'fill: #fff;'])</span>
-                <span class="fw-bold ms-1">POS tes</span>
+                <span class="fw-bold ms-1">POS</span>
               </h2>
             </div>
             <!-- /Logo -->

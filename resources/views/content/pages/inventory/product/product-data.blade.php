@@ -49,15 +49,24 @@
       <div class="row">
         <div class="col-lg-4 mb-4">
           <label class="form-label" for="name">Nama</label>
-          <input class="form-control dt-input" id="name" data-column="2" placeholder="Nama Barang" />
+          <input class="form-control dt-input" id="name" data-column="3" placeholder="Nama Barang" />
         </div>
         <div class="col-lg-4 mb-4">
           <label class="form-label" for="stock">Stok</label>
-          <input class="form-control dt-input" type="number" id="stock" data-column="3" placeholder="Stok Barang" />
+          <div class="input-group">
+            <button id="stockOperatorBtn" class="btn btn-outline-info dropdown-toggle" type="button" data-bs-toggle="dropdown">Lebih Besar dari</button>
+            <ul id="stockOperatorList" class="dropdown-menu">
+              <li><a class="dropdown-item" href="javascript:void(0);">Lebih Kecil dari</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0);">Lebih Besar dari</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0);">Sama dengan</a></li>
+            </ul>
+            <input class="form-control" id="stock_operator" hidden/>
+            <input class="form-control dt-input" type="number" id="stock" data-column="4" placeholder="Stok Barang" />
+          </div>
         </div>
         <div class="col-lg-4 mb-4">
           <label class="form-label" for="uom">Satuan</label>
-          <input class="form-control dt-input" id="uom" data-column="4" placeholder="Satuan Barang" />
+          <input class="form-control dt-input" id="uom" data-column="5" placeholder="Satuan Barang" />
         </div>
       </div>
     </div>
@@ -76,12 +85,12 @@
 
   <div class="card">
     <div class="table-responsive">
-      <table class="table table-hover" id="product-datatable">
+      <table class="table table-hover" id="productDatatable">
         <thead style="background: #8f8da852">
           <tr>
             <th class="text-center" style="max-width: 50px">Aksi</th>
             <th>Id</th>
-            <th style="max-width: 100px">Foto</th>
+            <th style="width: 100px">Foto</th>
             <th>Nama Barang</th> <!-- 3 -->
             <th>Stok</th> <!-- 4 -->
             <th>Satuan</th> <!-- 5 -->

@@ -72,7 +72,7 @@
 
   <div class="card">
     <div class="table-responsive">
-      <table class="table table-hover" id="user-datatable">
+      <table class="table table-hover" id="userDatatable">
         <thead style="background: #8f8da852">
           <tr>
             <th class="text-center" style="max-width: 50px">Aksi</th>
