@@ -11,22 +11,26 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('suppliers', function (Blueprint $table) {
+        Schema::create('purchase_orders', function (Blueprint $table) {
             $table->id();
-            $table->string('code', 20)->nullable()->unique();
-            $table->string('name', 100);
-            $table->string('pic', 50);
-            $table->string('address', 150)->nullable();
-            $table->string('phone_no', 20);
+            $table->string('po_code', 20)->nullable()->unique();
+            $table->datetime('purchase_date');
+            $table->foreignId('supplier_id')
+                ->constrained('suppliers', indexName: 'purchase_orders_supplier_id_foreign')
+                ->cascadeOnUpdate()
+                ->restrictOnDelete();
+            $table->integer('total_item');
+            $table->integer('total_price');
             $table->string('remarks', 150)->nullable();
+            $table->string('status', 20);
             $table->foreignId('created_by')
                 ->nullable()
-                ->constrained('users', indexName: 'suppliers_created_by_foreign')
+                ->constrained('users', indexName: 'purchase_orders_created_by_foreign')
                 ->cascadeOnUpdate() // when updated, all related rows also get updated
                 ->restrictOnDelete(); // prevent delete if there are related rows
             $table->foreignId('updated_by')
                 ->nullable()
-                ->constrained('users', indexName: 'suppliers_updated_by_foreign')
+                ->constrained('users', indexName: 'purchase_orders_updated_by_foreign')
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
             $table->timestamps();
@@ -38,6 +42,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('suppliers');
+        Schema::dropIfExists('purchase_orders');
     }
 };

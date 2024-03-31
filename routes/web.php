@@ -7,10 +7,12 @@ use App\Http\Controllers\language\LanguageController;
 use App\Http\Controllers\pages\DashboardController;
 use App\Http\Controllers\pages\MiscError;
 use App\Http\Controllers\authentications\RegisterController;
-use App\Http\Controllers\pages\CustomerController;
-use App\Http\Controllers\pages\ProductController;
-use App\Http\Controllers\pages\SupplierController;
-use App\Http\Controllers\pages\UserController;
+use App\Http\Controllers\pages\master\CustomerController;
+use App\Http\Controllers\pages\master\SupplierController;
+use App\Http\Controllers\pages\inventory\ProductController;
+use App\Http\Controllers\pages\settings\UserController;
+use App\Http\Controllers\pages\transaction\PurchaseOrderController;
+use App\Http\Controllers\pages\transaction\SalesOrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,13 +60,38 @@ Route::middleware(['auth'])->group(function () {
   Route::prefix('/inventory')->group(function () {
     // Product
     Route::prefix('/product')->controller(ProductController::class)->name('inventory-product.')->group(function () {
-      Route::get('/', 'index')->name('index');                  // '/inventory-product/'
-      Route::get('/get-data', 'getData')->name('get-data');     // '/inventory-product/get-data'
-      Route::get('/create', 'create')->name('create');          // '/inventory-product/create'
-      Route::post('/store', 'store')->name('store');            // '/inventory-product/store'
-      Route::get('/{id}/edit', 'edit')->name('edit');           // '/inventory-product/{id}/edit'
-      Route::put('/{id}/update', 'update')->name('update');     // '/inventory-product/{id}/update'
-      Route::delete('/{id}/delete', 'delete')->name('delete');  // '/inventory-product/{id}/delete'
+      Route::get('/', 'index')->name('index');                  // '/inventory/product/'
+      Route::get('/get-data', 'getData')->name('get-data');     // '/inventory/product/get-data'
+      Route::get('/create', 'create')->name('create');          // '/inventory/product/create'
+      Route::post('/store', 'store')->name('store');            // '/inventory/product/store'
+      Route::get('/{id}/edit', 'edit')->name('edit');           // '/inventory/product/{id}/edit'
+      Route::put('/{id}/update', 'update')->name('update');     // '/inventory/product/{id}/update'
+      Route::delete('/{id}/delete', 'delete')->name('delete');  // '/inventory/product/{id}/delete'
+    });
+  });
+
+  // Transaction
+  Route::prefix('/transaction')->group(function () {
+    // Purchase Order
+    Route::prefix('/purchase-order')->controller(PurchaseOrderController::class)->name('transaction-purchase-order.')->group(function () {
+      Route::get('/', 'index')->name('index');                  // '/transaction/purchase-order/'
+      Route::get('/get-data', 'getData')->name('get-data');     // '/transaction/purchase-order/get-data'
+      Route::get('/create', 'create')->name('create');          // '/transaction/purchase-order/create'
+      Route::post('/store', 'store')->name('store');            // '/transaction/purchase-order/store'
+      Route::get('/{id}/edit', 'edit')->name('edit');           // '/transaction/purchase-order/{id}/edit'
+      Route::put('/{id}/update', 'update')->name('update');     // '/transaction/purchase-order/{id}/update'
+      Route::delete('/{id}/delete', 'delete')->name('delete');  // '/transaction/purchase-order/{id}/delete'
+    });
+
+    // Sales Order
+    Route::prefix('/sales-order')->controller(SalesOrderController::class)->name('transaction-sales-order.')->group(function () {
+      Route::get('/', 'index')->name('index');                  // '/transaction/sales-order/'
+      Route::get('/get-data', 'getData')->name('get-data');     // '/transaction/sales-order/get-data'
+      Route::get('/create', 'create')->name('create');          // '/transaction/sales-order/create'
+      Route::post('/store', 'store')->name('store');            // '/transaction/sales-order/store'
+      Route::get('/{id}/edit', 'edit')->name('edit');           // '/transaction/sales-order/{id}/edit'
+      Route::put('/{id}/update', 'update')->name('update');     // '/transaction/sales-order/{id}/update'
+      Route::delete('/{id}/delete', 'delete')->name('delete');  // '/transaction/sales-order/{id}/delete'
     });
   });
 
