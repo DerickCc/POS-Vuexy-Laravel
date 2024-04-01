@@ -54,14 +54,21 @@
         <div class="col-lg-4 mb-4">
           <label class="form-label" for="stock">Stok</label>
           <div class="input-group">
-            <button id="stockOperatorBtn" class="btn btn-outline-info dropdown-toggle" type="button" data-bs-toggle="dropdown">Lebih Besar dari</button>
-            <ul id="stockOperatorList" class="dropdown-menu">
-              <li><a class="dropdown-item" href="javascript:void(0);">Lebih Kecil dari</a></li>
-              <li><a class="dropdown-item" href="javascript:void(0);">Lebih Besar dari</a></li>
-              <li><a class="dropdown-item" href="javascript:void(0);">Sama dengan</a></li>
+            <button class="btn btn-outline-primary" id="stockOperatorBtn" data-bs-toggle="dropdown"
+              type="button"
+            ><</button>
+            <ul class="dropdown-menu" id="stockOperatorList">
+              <li><a class="dropdown-item" href="javascript:void(0);"><</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0);">></a></li>
+              <li><a class="dropdown-item" href="javascript:void(0);">=</a></li>
             </ul>
-            <input class="form-control" id="stock_operator" hidden/>
-            <input class="form-control dt-input" type="number" id="stock" data-column="4" placeholder="Stok Barang" />
+            <input
+              class="form-control dt-input-stock"
+              id="stock"
+              data-column="4"
+              type="number"
+              placeholder="Stok Barang"
+            />
           </div>
         </div>
         <div class="col-lg-4 mb-4">

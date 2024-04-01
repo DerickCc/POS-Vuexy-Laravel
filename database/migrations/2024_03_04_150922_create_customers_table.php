@@ -20,12 +20,12 @@ return new class extends Migration
             $table->string('address', 150)->nullable();
             $table->foreignId('created_by')
                 ->nullable()
-                ->constrained('users', indexName: 'customers_created_by')
+                ->constrained('users', indexName: 'customers_created_by_foreign')
                 ->cascadeOnUpdate() // when updated, all related rows also get updated
                 ->restrictOnDelete(); // prevent delete if there are related rows
             $table->foreignId('updated_by')
                 ->nullable()
-                ->constrained('users', indexName: 'customers_updated_by')
+                ->constrained('users', indexName: 'customers_updated_by_foreign')
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
             $table->timestamps();

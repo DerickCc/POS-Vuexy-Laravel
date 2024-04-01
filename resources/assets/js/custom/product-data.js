@@ -74,11 +74,28 @@ var prdTable = $('#productDatatable').DataTable({
 var addButton = $('<a class="btn btn-success float-end" href="product/create">Tambah</a>');
 $('.dataTables_length').append(addButton);
 
-
 $('input.dt-input').on('keyup', function () {
   prdTable.column($(this).attr('data-column')).search($(this).val()).draw();
 });
 
-$('#stockOperatorList').on('click', function (event){
+$('#stockOperatorList').on('click', function (event) {
   $('#stockOperatorBtn').text(event.target.textContent);
-})
+});
+
+// filter stock
+$('input.dt-input-stock').on('keyup', function () {
+  const input = $(this).val();
+
+  // if is number
+  if (!isNaN(input) && input != 'e') {
+    const operator = $('#stockOperatorBtn').text();
+    prdTable
+      .column($(this).attr('data-column'))
+      .search(operator + ' ' + input)
+      .draw();
+  }
+  // if empty string
+  else if (input == '') {
+    prdTable.column($(this).attr('data-column')).search(null).draw();
+  }
+});

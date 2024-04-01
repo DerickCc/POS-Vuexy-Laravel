@@ -47,8 +47,7 @@
     <div class="card-body">
       <form id="productForm"
         action="{{ isset($edit) ? route('inventory-product.update', $edit->id) : route('inventory-product.store') }}"
-        enctype="multipart/form-data"
-        method="POST"
+        enctype="multipart/form-data" method="POST"
       >
         @if (isset($edit))
           @method('PUT')
@@ -69,16 +68,18 @@
                 />
               </div>
               <div class="col-12 text-center">
-                  <img class="img-fluid rounded" id="previewImage"
-                    src="{{ isset($edit) && $edit->photo ? asset('storage/' . $edit->photo) : asset('assets/img/illustrations/image-placeholder.png') }}"
-                    style="width: 180px; height: 180px; cursor: pointer"
-                    onclick="document.getElementById('photo').click()"
-                  >
-                  <div class="invalid-feedback">
-                    @error('photo')
-                      {{ $message }}
-                    @enderror
-                  </div>
+                <img
+                  class="img-fluid rounded"
+                  id="previewImage"
+                  src="{{ isset($edit) && $edit->photo ? asset('storage/' . $edit->photo) : asset('assets/img/illustrations/image-placeholder.png') }}"
+                  style="width: 180px; height: 180px; cursor: pointer"
+                  onclick="document.getElementById('photo').click()"
+                >
+                <div class="text-danger">
+                  @error('photo')
+                    {{ $message }}
+                  @enderror
+                </div>
               </div>
             </div>
           </div>
