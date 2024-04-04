@@ -23,7 +23,7 @@ class CustomerController extends Controller
         return view('content.pages.master.customer.customer-data');
     }
 
-    public function getData(Request $request)
+    public function browseCustomer(Request $request)
     {
         if ($request->ajax()) {
             $customer = Customer::query();
@@ -85,6 +85,23 @@ class CustomerController extends Controller
                 })
                 ->make(true);
         }
+    }
+
+    public function getCustomerList()
+    {
+        $words = explode(' ', request('q'));
+
+        $customerList = Customer::query();
+
+        foreach ($words as $word) {
+            $customerList->where(function ($query) use ($word) {
+                $query->where('name', 'like', '%' . $word . '%');
+            });
+        };
+
+        $customerList = $customerList->get();
+
+        return response()->json($customerList);
     }
 
     /**

@@ -28,7 +28,7 @@ class PurchaseOrderController extends Controller
         return view('content.pages.transaction.purchase-order.purchase-order-data');
     }
 
-    public function getData(Request $request)
+    public function browsePo(Request $request)
     {
         if ($request->ajax()) {
             $customer = PurchaseOrder::query();

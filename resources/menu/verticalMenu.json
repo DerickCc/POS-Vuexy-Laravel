@@ -42,12 +42,12 @@
             "submenu": [
                 {
                     "url": "/transaction/purchase-order",
-                    "name": "Transaksi Pembelian",
+                    "name": "Pembelian",
                     "slug": "transaction-purchase-order"
                 },
                 {
                     "url": "/transaction/sales-order",
-                    "name": "Transaksi Penjualan",
+                    "name": "Penjualan",
                     "slug": "transaction-sales-order"
                 }
             ]
@@ -59,12 +59,12 @@
             "submenu": [
                 {
                     "url": "/report/purchase-report",
-                    "name": "Laporan Pembelian",
+                    "name": "Pembelian",
                     "slug": "report-purchase-report"
                 },
                 {
                     "url": "/report/sales-report",
-                    "name": "Laporan Penjualan",
+                    "name": "Penjualan",
                     "slug": "report-sales-report"
                 }
             ]

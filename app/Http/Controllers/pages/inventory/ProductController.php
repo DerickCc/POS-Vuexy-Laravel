@@ -34,7 +34,7 @@ class ProductController extends Controller
         return view('content.pages.inventory.product.product-data');
     }
 
-    public function getData(Request $request)
+    public function browseProduct(Request $request)
     {
         if ($request->ajax()) {
             $product = Product::query();
@@ -109,6 +109,23 @@ class ProductController extends Controller
                 })
                 ->make(true);
         }
+    }
+
+    public function getProductList()
+    {
+        $words = explode(' ', request('q'));
+
+        $productList = Product::query();
+
+        foreach ($words as $word) {
+            $productList->where(function ($query) use ($word) {
+                $query->where('name', 'like', '%' . $word . '%');
+            });
+        };
+
+        $productList = $productList->get();
+
+        return response()->json($productList);
     }
 
     /**
@@ -228,7 +245,6 @@ class ProductController extends Controller
                 if ($oldPhotoPath) {
                     Storage::disk('public')->delete($oldPhotoPath);
                 }
-
             });
         } catch (\Exception $e) {
             Log::error('Gagal Menghapus Product: ' . $e->getMessage());

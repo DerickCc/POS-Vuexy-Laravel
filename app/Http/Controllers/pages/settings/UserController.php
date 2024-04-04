@@ -22,7 +22,7 @@ class UserController extends Controller
         return view('content.pages.settings.user.user-data');
     }
 
-    public function getData(Request $request)
+    public function browseUser(Request $request)
     {
         if ($request->ajax()) {
             $customer = User::query();

@@ -23,7 +23,7 @@
 
 @section('content')
   <div class="d-flex align-items-center mb-3">
-    <h3 class="mb-0">Transaksi Penjualan</h3>
+    <h3 class="mb-0">Transaksi Pembelian</h3>
     <h2 class="mb-0 mx-3">|</h2>
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb mb-0">
@@ -31,7 +31,7 @@
           <a class="text-secondary" href="javascript:void(0)">Transaksi</a>
         </li>
         <li class="breadcrumb-item">
-          <a href="{{ route('master-customer.index') }}">Data Transaksi Penjualan</a>
+          <a href="{{ route('master-customer.index') }}">Data Transaksi Pembelian</a>
         </li>
       </ol>
     </nav>
@@ -41,7 +41,7 @@
       <div class="d-flex align-items-center">
         <i class="ti ti-filter ti-lg me-2"></i>
         <h4 class="card-title my-auto">
-          Filter Transaksi Penjualan
+          Filter Transaksi Pembelian
         </h4>
       </div>
     </div>

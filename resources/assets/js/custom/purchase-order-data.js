@@ -1,7 +1,7 @@
 var poTable = $('#purchaseOrderDatatable').DataTable({
   processing: true,
   serverSide: true,
-  ajax: '/transaction/purchase-order/get-data',
+  ajax: '/transaction/purchase-order/browse-po',
   columns: [
     {
       data: 'action',
@@ -49,7 +49,7 @@ var poTable = $('#purchaseOrderDatatable').DataTable({
   dom: '<"row"<"px-4 my-2 col-12"l>tr<"px-4 my-1 col-md-6"i><"px-4 mt-1 mb-3 col-md-6"p>>' // Customizing the layout
 });
 
-var addButton = $('<a class="btn btn-success float-end" href="purchase-order/create">Tambah</a>');
+var addButton = $('<a class="btn btn-primary float-end" href="purchase-order/create">Tambah</a>');
 $('.dataTables_length').append(addButton);
 
 // $('input.dt-input').on('keyup', function () {
