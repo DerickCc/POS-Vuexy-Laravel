@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 
@@ -14,10 +15,10 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('code', 20)->nullable()->unique();
             $table->string('name', 100);
+            $table->string('code', 20)->nullable()->unique();
             $table->string('photo', 100)->nullable();
-            $table->decimal('stock', $precision = 8, $scale = 2)->default(0.0);
+            $table->decimal('stock', $precision = 10, $scale = 2)->default(0.0);
             $table->string('uom', 50);
             $table->integer('purchase_price');
             $table->integer('selling_price');
@@ -41,13 +42,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        $productPhotoDirectory = 'public/product-photo';
-
         Schema::dropIfExists('products');
 
         // delete product-photo folder
-        if (Storage::disk('public')->exists($productPhotoDirectory)) {
-            Storage::disk('public')->delete($productPhotoDirectory);
+        if (Storage::disk('public')->exists('product-photo')) {
+            Storage::disk('public')->deleteDirectory('product-photo');
         }
 
     }

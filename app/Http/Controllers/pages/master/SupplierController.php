@@ -23,7 +23,7 @@ class SupplierController extends Controller
         return view('content.pages.master.supplier.supplier-data');
     }
 
-    public function getData(Request $request)
+    public function browseSupplier(Request $request)
     {
         if ($request->ajax()) {
             $supplier = Supplier::query();
@@ -95,6 +95,23 @@ class SupplierController extends Controller
                 })
                 ->make(true);
         };
+    }
+
+    public function getSupplierList()
+    {
+        $words = explode(' ', request('q'));
+
+        $supplierList = Supplier::query();
+
+        foreach ($words as $word) {
+            $supplierList->where(function ($query) use ($word) {
+                $query->where('name', 'like', '%' . $word . '%');
+            });
+        };
+
+        $supplierList = $supplierList->get();
+
+        return response()->json($supplierList);
     }
 
     /**

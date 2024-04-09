@@ -1,7 +1,7 @@
 var userTable = $('#userDatatable').DataTable({
   processing: true,
   serverSide: true,
-  ajax: '/settings/user/get-data',
+  ajax: '/settings/user/browse-user',
   columns: [
     {
       data: 'action',
@@ -52,7 +52,7 @@ var userTable = $('#userDatatable').DataTable({
   dom: '<"row"<"px-4 my-2 col-12"l>tr<"px-4 my-1 col-md-6"i><"px-4 mt-1 mb-3 col-md-6"p>>' // Customizing the layout
 });
 
-var addButton = $('<a class="btn btn-success float-end" href="user/create">Tambah</a>');
+var addButton = $('<a class="btn btn-primary float-end" href="user/create">Tambah</a>');
 $('.dataTables_length').append(addButton);
 
 $('input.dt-input').on('keyup', function () {
