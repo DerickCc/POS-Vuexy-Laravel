@@ -135,8 +135,7 @@ class CustomerController extends Controller
 
                 if (!$customer) abort(500);
             });
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             Log::error('Gagal menambah Customer: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Data Gagal disimpan: ' . $e);
         }
@@ -157,7 +156,7 @@ class CustomerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, int $id)
+    public function update(CustomerRequest $request, int $id)
     {
         $data = $request->validated();
 
@@ -174,8 +173,7 @@ class CustomerController extends Controller
                     'updated_by' => Auth::id(),
                 ]);
             });
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             Log::error('Gagal Mengupdate Customer: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Data Gagal Diupdate ' . $e);
         }
@@ -189,14 +187,13 @@ class CustomerController extends Controller
     public function delete(int $id)
     {
         try {
-            DB::transaction(function () use ($id){
+            DB::transaction(function () use ($id) {
                 $customer = Customer::where('id', $id)?->lockForUpdate()->first();
                 $deleted = $customer->delete();
 
                 if (!$deleted) abort(500);
             });
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             Log::error('Gagal Menghapus Customer: ' . $e->getMessage());
         }
     }

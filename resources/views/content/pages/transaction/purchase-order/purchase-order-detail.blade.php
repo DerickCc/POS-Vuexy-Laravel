@@ -8,12 +8,12 @@
 
 <!-- Vendor Styles -->
 @section('vendor-style')
-  @vite(['resources/assets/vendor/libs/select2/select2.scss', 'resources/assets/vendor/libs/tagify/tagify.scss', 'resources/assets/vendor/libs/bootstrap-select/bootstrap-select.scss', 'resources/assets/vendor/libs/typeahead-js/typeahead.scss'])
+  @vite(['resources/assets/vendor/libs/select2/select2.scss'])
 @endsection
 
 <!-- Vendor Scripts -->
 @section('vendor-script')
-  @vite(['resources/assets/vendor/libs/select2/select2.js', 'resources/assets/vendor/libs/tagify/tagify.js', 'resources/assets/vendor/libs/bootstrap-select/bootstrap-select.js', 'resources/assets/vendor/libs/typeahead-js/typeahead.js', 'resources/assets/vendor/libs/bloodhound/bloodhound.js'])
+  @vite(['resources/assets/vendor/libs/select2/select2.js', 'resources/assets/vendor/libs/cleavejs/cleave.js'])
 @endsection
 
 <!-- Page Scripts -->
@@ -41,33 +41,27 @@
     </nav>
   </div>
 
-  <form id="POForm"
-    action="{{ isset($edit) ? route('transaction-purchase-order.update', $edit->id) : route('transaction-purchase-order.store') }}"
-    method="POST"
-  >
-    @if (isset($edit))
-      @method('PUT')
-    @endif
-    @csrf
-
-    <div class="card mb-4">
-      <div class="card-header d-flex align-items-center">
-        <i class="ti ti-pencil-plus ti-lg me-2"></i>
-        <h4 class="card-title my-auto">{{ isset($edit) ? 'Edit' : 'Tambah' }} Transaksi Pembelian</h4>
+  <div class="card mb-4">
+    <div class="card-header d-flex align-items-center">
+      <i class="ti ti-pencil-plus ti-lg me-2"></i>
+      <h4 class="card-title my-auto">{{ isset($edit) ? 'Edit' : 'Tambah' }} Transaksi Pembelian</h4>
+    </div>
+    @if (session('error'))
+      <div class="alert alert-danger">
+        {{ session('error') }}
       </div>
-      @if (session('error'))
-        <div class="alert alert-danger">
-          {{ session('error') }}
-        </div>
-      @endif
-      <div class="card-body">
-
+    @endif
+    <div class="card-body">
+      <form id="POForm"
+        action="{{ isset($edit) ? route('transaction-purchase-order.update', $edit->id) : route('transaction-purchase-order.store') }}"
+        method="POST"
+      >
         <div class="row g-4">
           <div class="col-lg-4">
-            <label class="form-label" for="po_code">Kode Transaksi Pembelian</label>
+            <label class="form-label" for="poCode">Kode Transaksi Pembelian</label>
             <input
               class="form-control @error('po_code') is-invalid @enderror"
-              id="po_code"
+              id="poCode"
               name="po_code"
               type="text"
               value="{{ old('po_code', $edit->po_code ?? '') }}"
@@ -82,12 +76,12 @@
           </div>
 
           <div class="col-lg-4">
-            <label class="form-label" for="purchase_date">Tanggal Pembelian</label>
+            <label class="form-label" for="purchaseDate">Tanggal Pembelian</label>
             <input
               class="form-control @error('purchase_date') is-invalid @enderror"
-              id="purchase_date"
+              id="purchaseDate"
               name="purchase_date"
-              type="date"
+              type="datetime-local"
               value="{{ old('purchase_date', $edit->purchase_date ?? '') }}"
               readonly
               placeholder="Tanggal Pembelian"
@@ -100,8 +94,8 @@
           </div>
 
           <div class="col-lg-4">
-            <label class="form-label required" for="selectSupplier">Supplier</label>
-            <select class="select2 form-select" id="selectSupplier" name="supplier_id">
+            <label class="form-label required" for="supplierId">Supplier</label>
+            <select class="select2 form-select" id="supplierId" name="supplier_id">
             </select>
           </div>
 
@@ -116,45 +110,71 @@
             ></textarea>
           </div>
         </div>
-      </div>
+      </form>
     </div>
+  </div>
 
-    <div class="card">
-      <div class="card-header d-flex align-items-center justify-content-between">
-        <h4 class="card-title my-auto">
-          <i class="ti ti-shopping-cart ti-lg me-2"></i>
-          Detail Barang Pembelian
-        </h4>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productModal" type="button">Tambah
-          Barang</button>
-      </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-12">
-            <table id="PODetailTable" class="table">
-              <tr>
-                <th>Aksi</th>
-                <th>No.</th>
-                <th>Nama Barang</th>
-                <th>Harga Beli</th>
-                <th>Qty</th>
-                <th>Total</th>
-                <th>Satuan</th>
-                <th>Keterangan</th>
-              </tr>
+  <div class="card">
+    <div class="card-header d-flex align-items-center justify-content-between">
+      <h4 class="card-title my-auto">
+        <i class="ti ti-shopping-cart ti-lg me-2"></i>
+        Detail Barang Pembelian
+      </h4>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-12">
+          <div class="table-responsive">
+            <table class="table table-hover" id="PODetailTable">
+              <thead style="background: #8f8da852">
+                <tr>
+                  <th class="text-center px-0" width="5%">Aksi</th>
+                  <th width="27%">Barang</th>
+                  <th width="20%">Harga Beli</th>
+                  <th width="13%">Qty</th>
+                  <th width="12%">Satuan</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>
+                    <button class="btn btn-icon btn-primary" id="addProductRowBtn" type="button">
+                      <i class="ti ti-plus ti-xs"></i>
+                    </button>
+                  </th>
+                  <th></th>
+                  <th></th>
+                  <th colspan="2"><span class="float-end">Grand Total</span></th>
+                  <td>
+                    <div class="input-group">
+                      <span class="input-group-text">Rp</span>
+                      <input
+                        class="form-control"
+                        id="grandTotal"
+                        name="grand_total"
+                        value="0"
+                        readonly
+                      />
+                    </div>
+                  </td>
+                </tr>
+              </tfoot>
             </table>
           </div>
         </div>
-        <div class="row mt-4">
-          <div class="col-12">
-            <a class="btn btn-outline-primary float-start"
-              href="{{ route('transaction-purchase-order.index') }}">Kembali</a>
-            <button class="btn btn-success float-end" id="submitBtn" type="submit">Simpan</button>
-          </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-12">
+          <a class="btn btn-outline-primary float-start"
+            href="{{ route('transaction-purchase-order.index') }}">Kembali</a>
+          <button class="btn btn-success float-end" id="submitBtn" type="button">Simpan</button>
         </div>
       </div>
     </div>
-  </form>
+  </div>
 
   @include('content.pages.transaction.purchase-order.modal.product-modal')
 @endsection

@@ -25,8 +25,8 @@ var poTable = $('#purchaseOrderDatatable').DataTable({
       name: 'total_item'
     },
     {
-      data: 'total_price',
-      name: 'total_price'
+      data: 'grand_total',
+      name: 'grand_total'
     },
     {
       data: 'status',

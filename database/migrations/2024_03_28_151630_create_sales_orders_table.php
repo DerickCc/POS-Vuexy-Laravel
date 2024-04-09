@@ -19,14 +19,14 @@ return new class extends Migration
                 ->constrained('customers', indexName: 'sales_orders_customer_id_foreign')
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
-            $table->string('payment_type', 10);
+            $table->string('payment_type', 15);
             $table->integer('sub_total');
             $table->integer('discount');
             $table->integer('grand_total');
             $table->integer('paid_amount');
             $table->integer('return_amount');
             $table->string('remarks', 150)->nullable();
-            $table->string('status', 20);
+            $table->string('status', 20)->default('Dalam Proses');
             $table->foreignId('created_by')
                 ->nullable()
                 ->constrained('users', indexName: 'sales_orders_created_by_foreign')

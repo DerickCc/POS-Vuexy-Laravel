@@ -23,8 +23,9 @@ return new class extends Migration
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
             $table->string('service_name', 100);
+            $table->integer('selling_price');
+            $table->decimal('quantity', $precision = 10, $scale = 2);
             $table->integer('total_price');
-            $table->decimal('quantity', $precision = 8, $scale = 2);
             $table->foreignId('created_by')
                 ->nullable()
                 ->constrained('users', indexName: 'sales_order_details_created_by_foreign')

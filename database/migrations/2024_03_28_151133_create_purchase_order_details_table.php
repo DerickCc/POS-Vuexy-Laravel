@@ -21,8 +21,9 @@ return new class extends Migration
                 ->constrained('products', indexName: 'products_product_id_foreign')
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
-            $table->integer('total_item');
-            $table->decimal('quantity', $precision = 8, $scale = 2);
+            $table->integer('purchase_price');
+            $table->decimal('quantity', $precision = 10, $scale = 2);
+            $table->integer('total_price');
             $table->foreignId('created_by')
                 ->nullable()
                 ->constrained('users', indexName: 'purchase_order_details_created_by_foreign')

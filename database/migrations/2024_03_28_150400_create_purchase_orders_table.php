@@ -20,9 +20,9 @@ return new class extends Migration
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
             $table->integer('total_item');
-            $table->integer('total_price');
+            $table->integer('grand_total');
             $table->string('remarks', 150)->nullable();
-            $table->string('status', 20);
+            $table->string('status', 20)->default('Dalam Proses');
             $table->foreignId('created_by')
                 ->nullable()
                 ->constrained('users', indexName: 'purchase_orders_created_by_foreign')

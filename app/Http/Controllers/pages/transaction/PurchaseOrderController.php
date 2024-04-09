@@ -4,7 +4,11 @@ namespace App\Http\Controllers\pages\transaction;
 
 use App\Http\Controllers\Controller;
 use App\Models\PurchaseOrder;
+use App\Models\PurchaseOrderDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
 
 class PurchaseOrderController extends Controller
@@ -59,8 +63,8 @@ class PurchaseOrderController extends Controller
                 ->addColumn('supplier', function ($data) {
                     return 'supplier';
                 })
-                ->addColumn('total_item', function ($data) {
-                    return $data->total_item;
+                ->addColumn('grand_total', function ($data) {
+                    return $data->grand_total;
                 })
                 ->addColumn('total_price', function ($data) {
                     return $data->total_price;
@@ -111,7 +115,48 @@ class PurchaseOrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Log::error($request->json()->all());
+
+        $data = $request->json()->all();
+
+        try {
+            DB::transaction(function () use ($data) {
+                $PO = PurchaseOrder::create([
+                    'purchase_date' => $data['purchase_date'],
+                    'supplier_id' => $data['supplier_id'],
+                    'total_item' => count($data['po_detail']),
+                    'grand_total' => $data['grand_total'],
+                    'remarks' => $data['remarks'],
+                ]);
+
+                $PO->createdBy()->associate(Auth::user());
+                $PO->updatedBy()->associate(Auth::user());
+
+                $PO->saveOrFail();
+                if (!$PO) abort(500);
+
+                foreach ($data['po_detail'] as $detail) {
+                    $POD = PurchaseOrderDetail::create([
+                        'po_id' => $PO->id,
+                        'product_id' => $detail['product_id'],
+                        'purchase_price' => $detail['purchase_price'],
+                        'quantity' => $detail['quantity'],
+                        'total_price' => $detail['total_price'],
+                    ]);
+
+                    $POD->createdBy()->associate(Auth::user());
+                    $POD->updatedBy()->associate(Auth::user());
+
+                    $POD->saveOrFail();
+                    if (!$POD) abort(500);
+                }
+            });
+        } catch (\Exception $e) {
+            Log::error('Gagal menyimpan Transaksi Pembelian: ' . $e->getMessage());
+            return response()->json(['error', 'Gagal menyimpan Transaksi Pembelian: ' . $e->getMessage()], 500);
+        }
+
+        return response()->json(['message' => 'Transaksi Pembelian Berhasil Disimpan'], 200);
     }
 
     /**
