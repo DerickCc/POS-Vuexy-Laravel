@@ -8,12 +8,12 @@
 
 <!-- Vendor Styles -->
 @section('vendor-style')
-  @vite(['resources/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.scss', 'resources/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.scss'])
+  @vite(['resources/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.scss', 'resources/assets/vendor/libs/flatpickr/flatpickr.scss', 'resources/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.scss', 'resources/assets/vendor/libs/bootstrap-select/bootstrap-select.scss', 'resources/assets/vendor/libs/select2/select2.scss'])
 @endsection
 
 <!-- Vendor Scripts -->
 @section('vendor-script')
-  @vite(['resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js'])
+  @vite(['resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js', 'resources/assets/vendor/libs/flatpickr/flatpickr.js', 'resources/assets/vendor/libs/moment/moment.js', 'resources/assets/vendor/libs/bootstrap-select/bootstrap-select.js', 'resources/assets/vendor/js/dropdown-hover.js', 'resources/assets/vendor/libs/select2/select2.js'])
 @endsection
 
 <!-- Page Scripts -->
@@ -48,20 +48,29 @@
     <div class="card-body">
       <div class="row">
         <div class="col-lg-3 mb-4">
-          <label class="form-label" for="po_code">Kode</label>
-          <input class="form-control dt-input" id="po_code" data-column="2" placeholder="Kode Transaksi" />
+          <label class="form-label" for="poCode">Kode</label>
+          <input class="form-control dt-input" id="poCode" data-column="1" placeholder="Kode Transaksi" />
         </div>
         <div class="col-lg-3 mb-4">
-          <label class="form-label" for="start_date">Tanggal Mulai</label>
-          <input class="form-control dt-input" id="start_date" placeholder="Tanggal Mulai" />
+          <label class="form-label" for="supplierId">Supplier</label>
+          <select class="select2 form-select dt-input" id="supplierId" data-column="3" data-allow-clear="true">
+          </select>
         </div>
         <div class="col-lg-3 mb-4">
-          <label class="form-label" for="end_date">Tanggal Akhir</label>
-          <input class="form-control dt-input" id="end_date" placeholder="Tanggal Akhir" />
+          <label class="form-label" for="startDate">Tanggal Mulai</label>
+          <input class="form-control dt-date-input" id="startDate" placeholder="Tanggal Mulai" />
+        </div>
+        <div class="col-lg-3 mb-4">
+          <label class="form-label" for="endDate">Tanggal Akhir</label>
+          <input class="form-control dt-date-input" id="endDate" placeholder="Tanggal Akhir" />
         </div>
         <div class="col-lg-3 mb-4">
           <label class="form-label" for="status">Status</label>
-          <input class="form-control dt-input" id="status" data-column="4" placeholder="Status Transaksi" />
+          <select class="selectpicker dt-input w-100" data-column="6" data-style="btn-default">
+            <option value="Semua">Semua</option>
+            <option value="Dalam Proses">Dalam Proses</option>
+            <option value="Selesai">Selesai</option>
+          </select>
         </div>
       </div>
     </div>
@@ -79,17 +88,17 @@
   @endif
 
   <div class="card">
-    <div class="table-responsive">
-      <table class="table table-hover" id="purchaseOrderDatatable">
+    <div class="text-nowrap">
+      <table class="table table-hover" id="poDatatable">
         <thead style="background: #8f8da852">
           <tr>
-            <th class="text-center" style="max-width: 60px">Aksi</th>
-            <th style="max-width: 80px">Kode</th>
-            <th>Tanggal Pembelian</th>
+            <th class="text-center" width="5%">Aksi</th>
+            <th width="10%">Kode</th>
+            <th width="17%">Tanggal Pembelian</th>
             <th>Supplier</th>
-            <th>Total Item</th>
-            <th>Total Harga</th>
-            <th>Status</th>
+            <th width="5%">Item</th>
+            <th width="15%">Total Harga</th>
+            <th class="text-center" width="10%">Status</th>
             <th>Keterangan</th>
           </tr>
         </thead>

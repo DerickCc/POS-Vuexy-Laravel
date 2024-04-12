@@ -1,6 +1,7 @@
 var supTable = $('#supplierDatatable').DataTable({
   processing: true,
   serverSide: true,
+  scrollX: true,
   ajax: '/master/supplier/browse-supplier',
   columns: [
     {

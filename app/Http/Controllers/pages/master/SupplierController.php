@@ -114,6 +114,11 @@ class SupplierController extends Controller
         return response()->json($supplierList);
     }
 
+    public function getSupplierById(Request $request) {
+        $supplier = Supplier::findOrFail($request->input('id'));
+        return response()->json($supplier);
+    }
+
     /**
      * Show the form for creating a new resource.
      */

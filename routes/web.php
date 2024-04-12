@@ -38,6 +38,7 @@ Route::middleware(['auth'])->group(function () {
       Route::get('/', 'index')->name('index');                                      // '/master/supplier/'
       Route::get('/browse-supplier', 'browseSupplier')->name('browse-supplier');    // '/master/supplier/browse-supplier'
       Route::get('/get-supplier-list', 'getSupplierList')->name('get-supplier-list');    // '/master/supplier/get-supplier-list'
+      Route::get('/get-supplier-by-id', 'getSupplierById')->name('get-supplier-by-id');    // '/master/supplier/get-supplier-by-id'
       Route::get('/create', 'create')->name('create');                              // '/master/supplier/create'
       Route::post('/store', 'store')->name('store');                                // '/master/supplier/store'
       Route::get('/{id}/edit', 'edit')->name('edit');                               // '/master/supplier/{id}/edit'
@@ -65,6 +66,7 @@ Route::middleware(['auth'])->group(function () {
       Route::get('/', 'index')->name('index');                                    // '/inventory/product/'
       Route::get('/browse-product', 'browseProduct')->name('browse-product');     // '/inventory/product/browse-product'
       Route::get('/get-product-list', 'getProductList')->name('get-product-list'); // '/inventory/product/get-product-list'
+      Route::get('/get-product-by-id', 'getProductById')->name('get-product-by-id'); // '/inventory/product/get-product-by-id'
       Route::get('/create', 'create')->name('create');                            // '/inventory/product/create'
       Route::post('/store', 'store')->name('store');                              // '/inventory/product/store'
       Route::get('/{id}/edit', 'edit')->name('edit');                             // '/inventory/product/{id}/edit'
@@ -81,8 +83,10 @@ Route::middleware(['auth'])->group(function () {
       Route::get('/browse-po', 'browsePo')->name('browse-po');    // '/transaction/purchase-order/browse-po'
       Route::get('/create', 'create')->name('create');            // '/transaction/purchase-order/create'
       Route::post('/store', 'store')->name('store');              // '/transaction/purchase-order/store'
+      Route::get('/{id}/view', 'view')->name('view');             // '/transaction/purchase-order/{id}/view'
       Route::get('/{id}/edit', 'edit')->name('edit');             // '/transaction/purchase-order/{id}/edit'
       Route::put('/{id}/update', 'update')->name('update');       // '/transaction/purchase-order/{id}/update'
+      Route::put('/{id}/finish', 'finish')->name('finish');       // '/transaction/purchase-order/{id}/finish'
       Route::delete('/{id}/delete', 'delete')->name('delete');    // '/transaction/purchase-order/{id}/delete'
     });
 

@@ -1,6 +1,7 @@
 var cusTable = $('#customerDatatable').DataTable({
   processing: true,
   serverSide: true,
+  scrollX: true,
   ajax: '/master/customer/browse-customer',
   columns: [
     {

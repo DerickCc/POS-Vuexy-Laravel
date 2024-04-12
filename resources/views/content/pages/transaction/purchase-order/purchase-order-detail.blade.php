@@ -34,7 +34,8 @@
           <a href="{{ route('transaction-purchase-order.index') }}">Data Transaksi Pembelian</a>
         </li>
         <li class="breadcrumb-item">
-          <a class="text-secondary" href="javascript:void(0)">{{ isset($edit) ? 'Edit' : 'Tambah' }} Transaksi
+          <a class="text-secondary"
+            href="javascript:void(0)">{{ isset($edit) ? 'Edit' : (isset($view) ? 'Lihat' : 'Tambah') }} Transaksi
             Pembelian</a>
         </li>
       </ol>
@@ -43,8 +44,9 @@
 
   <div class="card mb-4">
     <div class="card-header d-flex align-items-center">
-      <i class="ti ti-pencil-plus ti-lg me-2"></i>
-      <h4 class="card-title my-auto">{{ isset($edit) ? 'Edit' : 'Tambah' }} Transaksi Pembelian</h4>
+      <i class="ti ti-{{ isset($edit) ? 'edit' : (isset($view) ? 'eye' : 'pencil-plus') }} ti-lg me-2"></i>
+      <h4 class="card-title my-auto">{{ isset($edit) ? 'Edit' : (isset($view) ? 'Lihat' : 'Tambah') }} Transaksi Pembelian
+      </h4>
     </div>
     @if (session('error'))
       <div class="alert alert-danger">
@@ -53,18 +55,17 @@
     @endif
     <div class="card-body">
       <form id="POForm"
-        action="{{ isset($edit) ? route('transaction-purchase-order.update', $edit->id) : route('transaction-purchase-order.store') }}"
+        action="{{ isset($edit) ? route('transaction-purchase-order.update', $edit->id) : (isset($view) ? '' : route('transaction-purchase-order.store')) }}"
         method="POST"
       >
         <div class="row g-4">
           <div class="col-lg-4">
             <label class="form-label" for="poCode">Kode Transaksi Pembelian</label>
             <input
-              class="form-control @error('po_code') is-invalid @enderror"
+              class="form-control"
               id="poCode"
               name="po_code"
               type="text"
-              value="{{ old('po_code', $edit->po_code ?? '') }}"
               readonly
               placeholder="Auto Generate"
             />
@@ -82,7 +83,6 @@
               id="purchaseDate"
               name="purchase_date"
               type="datetime-local"
-              value="{{ old('purchase_date', $edit->purchase_date ?? '') }}"
               readonly
               placeholder="Tanggal Pembelian"
             />
@@ -107,7 +107,7 @@
               name="remarks"
               rows="4"
               placeholder="Keterangan"
-            ></textarea>
+            >{{ old('remarks', $edit->remarks ?? '') }}</textarea>
           </div>
         </div>
       </form>
@@ -124,16 +124,17 @@
     <div class="card-body">
       <div class="row">
         <div class="col-12">
-          <div class="table-responsive">
+
+          <div class="table-responsive text-nowrap">
             <table class="table table-hover" id="PODetailTable">
               <thead style="background: #8f8da852">
                 <tr>
-                  <th class="text-center px-0" width="5%">Aksi</th>
-                  <th width="27%">Barang</th>
-                  <th width="20%">Harga Beli</th>
-                  <th width="13%">Qty</th>
-                  <th width="12%">Satuan</th>
-                  <th>Total</th>
+                  <th class="text-center px-0" style="max-width: 50px">Aksi</th>
+                  <th style="min-width: 360px">Barang</th>
+                  <th style="min-width: 210px">Harga Beli</th>
+                  <th style="min-width: 130px">Qty</th>
+                  <th style="min-width: 150px">Satuan</th>
+                  <th style="min-width: 230px">Total</th>
                 </tr>
               </thead>
               <tbody>
@@ -141,7 +142,9 @@
               <tfoot>
                 <tr>
                   <th>
-                    <button class="btn btn-icon btn-primary" id="addProductRowBtn" type="button">
+                    <button class="btn btn-icon btn-primary" id="addProductRowBtn" type="button"
+                      @if (isset($view)) style="display: none !important;" @endif
+                    >
                       <i class="ti ti-plus ti-xs"></i>
                     </button>
                   </th>
@@ -170,11 +173,16 @@
         <div class="col-12">
           <a class="btn btn-outline-primary float-start"
             href="{{ route('transaction-purchase-order.index') }}">Kembali</a>
-          <button class="btn btn-success float-end" id="submitBtn" type="button">Simpan</button>
+          <button class="btn btn-success float-end" id="submitBtn" type="button"
+            @if (isset($view)) style="display: none !important;" @endif
+          >Simpan</button>
         </div>
       </div>
     </div>
   </div>
-
-  @include('content.pages.transaction.purchase-order.modal.product-modal')
 @endsection
+
+<script>
+  var edit = <?= $edit ?? 'null' ?>;
+  var view = <?= $view ?? 'null' ?>;
+</script>

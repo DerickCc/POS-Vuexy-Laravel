@@ -1,23 +1,108 @@
 var rowIndex = 0;
-
-// On Init
-$(function () {
-  addProductRow();
-
-  // Get the current date
-  let currentDate = new Date();
-  currentDate.setTime(currentDate.getTime() + 7 * 60 * 60 * 1000); // Adjust for Jakarta timezone (UTC+7)
-  let formattedDate = currentDate.toISOString().split('.')[0];
-
-  $('#purchaseDate').val(formattedDate);
-});
+const table = document.getElementById('PODetailTable').getElementsByTagName('tbody')[0];
+var deletedDetail = [];
 
 function formatToCurrency(id) {
   new Cleave($(id), {
     numeral: true,
-    numeralThousandsGroupStyle: 'thousand'
+    numeralDecimalMark: ',',
+    delimiter: '.',
+    numeralThousandsGroupStyle: 'thousand',
+    numeralDecimalScale: 2
   });
 }
+
+function calculateGrandTotal() {
+  // grand total
+  var grandTotal = 0;
+  for (let i = 1; i <= rowIndex; i++) {
+    grandTotal += parseInt($(`#prdTotal${i}`).val()?.replace(/\./g, '')) || 0;
+  }
+  $('#grandTotal').val(grandTotal);
+  formatToCurrency(`#grandTotal`);
+}
+
+// On Init
+$(function () {
+  const poData = edit || view;
+  console.log(poData);
+  if (poData) {
+    // set po code
+    $('#poCode').val(poData.po_code);
+
+    // set supplier
+    $('#supplierId').append(`<option value='${poData.supplier_id.id}'>${poData.supplier_id.name}</option>`);
+
+    // select the supplier
+    $('#supplierId').val(poData.supplier_id.id).trigger('change');
+
+    // set date
+    const datetime = poData.purchase_date.split(' ');
+    $('#purchaseDate').val(datetime.join('T'));
+
+    // set disabled, readonly, and hidden if view
+    if (view) {
+      $('#supplierId').prop('disabled', true);
+      $('#remarks').prop('readonly', true);
+    }
+
+    // set detail barang
+    for (let i = 0; i < poData.po_detail.length; i++) {
+      const po_detail = poData.po_detail[i];
+      console.log(po_detail);
+
+      addProductRow();
+
+      // set po detail Id
+      $(`#poDetailId${i + 1}`).val(po_detail.id);
+
+      // set product
+      $(`#prdId${i + 1}`).append(`<option value='${po_detail.product_id.id}'>${po_detail.product_id.name}</option>`);
+
+      // set Uom
+      $(`#prdUom${i + 1}`).val(po_detail.product_id.uom);
+
+      // select the product
+      $(`#prdId${i + 1}`)
+        .val(po_detail.product_id.id)
+        .trigger('change');
+
+      // set the purchase price
+      $(`#prdPurchasePrice${i + 1}`).val(po_detail.purchase_price);
+      formatToCurrency($(`#prdPurchasePrice${i + 1}`));
+
+      // set the quantity
+      $(`#prdQuantity${i + 1}`).val(po_detail.quantity);
+
+      // set the total
+      $(`#prdTotal${i + 1}`).val(po_detail.total_price);
+      formatToCurrency($(`#prdTotal${i + 1}`));
+
+      // set disabled, readonly, and hidden if view
+      if (view) {
+        $(`#prdId${i + 1}`).prop('disabled', true);
+        $(`#prdPurchasePrice${i + 1}`).prop('readonly', true);
+        $(`#prdQuantity${i + 1}`).prop('readonly', true);
+
+        $(`#deleteProductRow${i + 1}`).removeClass('cursor-pointer');
+        $(`#deleteProductRow${i + 1}`).addClass('text-muted');
+      }
+    }
+
+    // set grand total
+    $('#grandTotal').val(poData.grand_total);
+    formatToCurrency($('#grandTotal'));
+  } else {
+    // Get the current date
+    let currentDate = new Date();
+    currentDate.setTime(currentDate.getTime() + 7 * 60 * 60 * 1000); // Adjust for Jakarta timezone (UTC+7)
+    const formattedDate = currentDate.toISOString().split('.')[0];
+    console.log(formattedDate);
+    $('#purchaseDate').val(formattedDate);
+
+    addProductRow();
+  }
+});
 
 // Page
 $('#supplierId').select2({
@@ -53,20 +138,22 @@ $('#supplierId').on('change', function () {
 function addProductRow() {
   rowIndex += 1;
 
-  const table = document.getElementById('PODetailTable').getElementsByTagName('tbody')[0];
   const idx = rowIndex;
   const newRow = table.insertRow();
 
   // Add cells to the new row
   const actionCell = newRow.insertCell(0); // Aksi
-  const productCell = newRow.insertCell(1); // Barang
-  const purchasePriceCell = newRow.insertCell(2); // Harga Beli
+  const productCell = newRow.insertCell(1); // Product
+  const purchasePriceCell = newRow.insertCell(2); // Purchase Price
   const quantityCell = newRow.insertCell(3); // Quantity
   const uomCell = newRow.insertCell(4); // Uom
   const totalCell = newRow.insertCell(5); // Total
 
   // Set the content of each cell
-  actionCell.innerHTML = `<span id="deleteProductRow${idx}" class="d-flex justify-content-center cursor-pointer" title="Hapus"><i class="ti ti-trash ti-sm text-danger"></i></span>`;
+  actionCell.innerHTML = `
+    <span id="deleteProductRow${idx}" class="d-flex justify-content-center cursor-pointer text-danger" title="Hapus"><i class="ti ti-trash ti-sm"></i></span>
+    <input id="poDetailId${idx}" name="id" value="0" hidden />
+  `;
   productCell.innerHTML = `<select id="prdId${idx}" name="product_id" class="select2 form-select">`;
   purchasePriceCell.innerHTML = `
     <div class="input-group">
@@ -118,7 +205,15 @@ function addProductRow() {
 
   // action
   $(`#deleteProductRow${idx}`).on('click', function () {
-    $(this).closest('tr').remove();
+    // can delete only if not view
+    if (!view) {
+      // add to deletedDetail if id != 0
+      const poDetailId = $(`#poDetailId${idx}`).val();
+      if (poDetailId != 0) deletedDetail.push(poDetailId);
+
+      $(this).closest('tr').remove();
+      calculateGrandTotal();
+    }
   });
 
   // product
@@ -153,26 +248,14 @@ function addProductRow() {
 
   // purchase price & quantity
   $(`#prdPurchasePrice${idx}, #prdQuantity${idx}`).on('keyup change', function () {
-    const formattedPurchasePrice = $(`#prdPurchasePrice${idx}`)
-      .val()
-      .replace(/[^0-9.-]+/g, '');
+    const formattedPurchasePrice = $(`#prdPurchasePrice${idx}`).val().replace(/\./g, '');
     const purchasePrice = formattedPurchasePrice || 0;
     const quantity = parseFloat($(`#prdQuantity${idx}`).val()) || 0;
 
     $(`#prdTotal${idx}`).val(purchasePrice * quantity);
     formatToCurrency(`#prdTotal${idx}`);
 
-    // grand total
-    var grandTotal = 0;
-    for (let i = 1; i <= table.rows.length; i++) {
-      grandTotal += parseInt(
-        $(`#prdTotal${i}`)
-          .val()
-          .replace(/[^0-9.-]+/g, '')
-      );
-    }
-    $('#grandTotal').val(grandTotal);
-    formatToCurrency(`#grandTotal`);
+    calculateGrandTotal();
   });
 }
 
@@ -203,18 +286,20 @@ $('#submitBtn').on('click', function () {
   data.push({ name: 'po_detail', value: detailData });
 
   // get data from PODetailTable footer
-  const grandTotal = $('#grandTotal')
-    .val()
-    .replace(/[^0-9.-]+/g, '');
+  const grandTotal = $('#grandTotal').val().replace(/\./g, '');
   data.push({ name: 'grand_total', value: grandTotal });
+
+  // get deletedDetail if edit
+  if (edit) {
+    data.push({ name: 'deleted_detail', value: deletedDetail });
+  }
 
   // format data
   const formattedData = {};
   data.forEach(function (item) {
     // validation
-    if (Array.isArray(item.value)) {
+    if (item.name == 'po_detail') {
       item.value.forEach(subItem => {
-        console.log(subItem);
         if (
           subItem.productId === null ||
           subItem.purchase_price === '' ||
@@ -224,8 +309,8 @@ $('#submitBtn').on('click', function () {
           valid = false;
           return;
         }
-        subItem.purchase_price = subItem.purchase_price.replace(/[^0-9.-]+/g, '');
-        subItem.total_price = subItem.total_price.replace(/[^0-9.-]+/g, '');
+        subItem.purchase_price = subItem.purchase_price.replace(/\./g, '');
+        subItem.total_price = subItem.total_price.replace(/\./g, '');
       });
     } else {
       if (item.name == 'supplier_id' && item.value == null) {
@@ -240,7 +325,7 @@ $('#submitBtn').on('click', function () {
 
   if (valid) {
     fetch($('#POForm').attr('action'), {
-      method: 'POST',
+      method: edit ? 'PUT' : 'POST',
       headers: {
         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
       },
@@ -256,7 +341,7 @@ $('#submitBtn').on('click', function () {
               confirmButton: 'btn btn-primary me waves-effect waves-light'
             }
           }).then(() => {
-            window.location.href = '../purchase-order';
+            window.location.href = '/transaction/purchase-order';
           });
         } else {
           Swal.fire({

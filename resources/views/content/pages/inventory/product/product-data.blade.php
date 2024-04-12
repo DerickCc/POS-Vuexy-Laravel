@@ -51,27 +51,26 @@
           <label class="form-label" for="name">Nama</label>
           <input class="form-control dt-input" id="name" data-column="3" placeholder="Nama Barang" />
         </div>
-        <div class="col-lg-4 mb-4">
+        <div class="col-lg-4 col-6 mb-4">
           <label class="form-label" for="stock">Stok</label>
           <div class="input-group">
-            <button class="btn btn-outline-primary" id="stockOperatorBtn" data-bs-toggle="dropdown"
-              type="button"
-            ><</button>
-            <ul class="dropdown-menu" id="stockOperatorList">
-              <li><a class="dropdown-item" href="javascript:void(0);"><</a></li>
-              <li><a class="dropdown-item" href="javascript:void(0);">></a></li>
-              <li><a class="dropdown-item" href="javascript:void(0);">=</a></li>
-            </ul>
-            <input
-              class="form-control dt-input-stock"
-              id="stock"
-              data-column="4"
-              type="number"
-              placeholder="Stok Barang"
-            />
+            <button class="btn btn-outline-primary" id="stockOperatorBtn" data-bs-toggle="dropdown" type="button"><</button>
+                <ul class="dropdown-menu" id="stockOperatorList">
+                  <li><a class="dropdown-item" href="javascript:void(0);"><</a>
+                  </li>
+                  <li><a class="dropdown-item" href="javascript:void(0);">></a></li>
+                  <li><a class="dropdown-item" href="javascript:void(0);">=</a></li>
+                </ul>
+                <input
+                  class="form-control dt-input-stock"
+                  id="stock"
+                  data-column="4"
+                  type="number"
+                  placeholder="Stok Barang"
+                />
           </div>
         </div>
-        <div class="col-lg-4 mb-4">
+        <div class="col-lg-4 col-6 mb-4">
           <label class="form-label" for="uom">Satuan</label>
           <input class="form-control dt-input" id="uom" data-column="5" placeholder="Satuan Barang" />
         </div>
@@ -91,13 +90,13 @@
   @endif
 
   <div class="card">
-    <div class="table-responsive">
+    <div class="text-nowrap">
       <table class="table table-hover" id="productDatatable">
         <thead style="background: #8f8da852">
           <tr>
-            <th class="text-center" style="max-width: 50px">Aksi</th>
+            <th class="text-center" width="5%">Aksi</th>
             <th>Id</th>
-            <th style="width: 100px">Foto</th>
+            <th style="min-width: 95px">Foto</th>
             <th>Nama Barang</th> <!-- 3 -->
             <th>Stok</th> <!-- 4 -->
             <th>Satuan</th> <!-- 5 -->

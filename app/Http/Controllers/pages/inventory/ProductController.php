@@ -128,6 +128,12 @@ class ProductController extends Controller
         return response()->json($productList);
     }
 
+    public function getProductById(Request $request) {
+        $product = Product::findOrFail($request->input('id'));
+        Log::error($product);
+        return response()->json($product);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -206,6 +212,7 @@ class ProductController extends Controller
                     'purchase_price' => $data['purchase_price'],
                     'selling_price' => $data['selling_price'],
                     'remarks' => $data['remarks'],
+                    'updated_by' => Auth::id(),
                 ]);
 
                 if (isset($data['photo']) && $data['photo']->isValid()) {

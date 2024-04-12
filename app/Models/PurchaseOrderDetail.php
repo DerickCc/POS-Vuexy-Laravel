@@ -20,7 +20,7 @@ class PurchaseOrderDetail extends Model
         'updated_by',
     ];
 
-    function POId(): BelongsTo
+    function poId(): BelongsTo
     {
         return $this->belongsTo(PurchaseOrder::class, 'po_id');
     }
