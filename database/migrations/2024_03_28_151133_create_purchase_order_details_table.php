@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('po_id')
                 ->constrained('purchase_orders', indexName: 'purchase_order_details_po_id_foreign')
                 ->cascadeOnUpdate()
-                ->restrictOnDelete();
+                ->cascadeOnDelete();
             $table->foreignId('product_id')
                 ->constrained('products', indexName: 'products_product_id_foreign')
                 ->cascadeOnUpdate()

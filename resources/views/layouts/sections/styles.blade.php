@@ -24,7 +24,7 @@
 {{-- Custom CSS --}}
 <style>
   label {
-    font-size: 15px !important;
+    font-size: 14px !important;
   }
 
   .required::after {

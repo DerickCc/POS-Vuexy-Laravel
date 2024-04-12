@@ -1,6 +1,7 @@
 var prdTable = $('#productDatatable').DataTable({
   processing: true,
   serverSide: true,
+  scrollX: true,
   ajax: '/inventory/product/browse-product',
   columns: [
     {
@@ -43,7 +44,7 @@ var prdTable = $('#productDatatable').DataTable({
       data: 'purchase_price',
       name: 'purchase_price',
       render: function (data, type, row) {
-        const formattedPrice = parseFloat(data).toLocaleString('en-US');
+        const formattedPrice = parseFloat(data).toLocaleString('id-ID');
         return `<span>Rp ${formattedPrice}</span>`;
       }
     },
@@ -51,7 +52,7 @@ var prdTable = $('#productDatatable').DataTable({
       data: 'selling_price',
       name: 'selling_price',
       render: function (data, type, row) {
-        const formattedPrice = parseFloat(data).toLocaleString('en-US');
+        const formattedPrice = parseFloat(data).toLocaleString('id-ID');
         return `<span>Rp ${formattedPrice}</span>`;
       }
     },
@@ -79,23 +80,31 @@ $('input.dt-input').on('keyup', function () {
 });
 
 $('#stockOperatorList').on('click', function (event) {
-  $('#stockOperatorBtn').text(event.target.textContent);
+  const operator = event.target.textContent;
+  if (operator == '<' || operator == '>' || operator == '=') {
+    $('#stockOperatorBtn').text(event.target.textContent);
+    filterStock();
+  }
 });
 
+$('input.dt-input-stock').on('keyup change', filterStock);
+
 // filter stock
-$('input.dt-input-stock').on('keyup', function () {
-  const input = $(this).val();
+function filterStock() {
+  const input = $('input.dt-input-stock').val();
+  const operator = $('#stockOperatorBtn').text();
+  console.log(operator + ' ' + input);
 
   // if is number
   if (!isNaN(input) && input != 'e') {
-    const operator = $('#stockOperatorBtn').text();
+    console.log(operator + ' ' + input);
     prdTable
-      .column($(this).attr('data-column'))
+      .column($('input.dt-input-stock').attr('data-column'))
       .search(operator + ' ' + input)
       .draw();
   }
   // if empty string
   else if (input == '') {
-    prdTable.column($(this).attr('data-column')).search(null).draw();
+    prdTable.column($('input.dt-input-stock').attr('data-column')).search(null).draw();
   }
-});
+}

@@ -71,7 +71,7 @@
   @endif
 
   <div class="card">
-    <div class="table-responsive">
+    <div class="text-nowrap">
       <table class="table table-hover" id="userDatatable">
         <thead style="background: #8f8da852">
           <tr>

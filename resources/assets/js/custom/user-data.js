@@ -1,6 +1,7 @@
 var userTable = $('#userDatatable').DataTable({
   processing: true,
   serverSide: true,
+  scrollX: true,
   ajax: '/settings/user/browse-user',
   columns: [
     {

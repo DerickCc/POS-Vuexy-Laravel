@@ -1,15 +1,19 @@
-if ($('#purchase_price')) {
-  new Cleave($('#purchase_price'), {
+function formatToCurrency(id) {
+  new Cleave($(id), {
     numeral: true,
-    numeralThousandsGroupStyle: 'thousand'
+    numeralDecimalMark: ',',
+    delimiter: '.',
+    numeralThousandsGroupStyle: 'thousand',
+    numeralDecimalScale: 2
   });
 }
 
+if ($('#purchase_price')) {
+  formatToCurrency($('#purchase_price'));
+}
+
 if ($('#selling_price')) {
-  new Cleave($('#selling_price'), {
-    numeral: true,
-    numeralThousandsGroupStyle: 'thousand'
-  });
+  formatToCurrency($('#selling_price'));
 }
 
 $('#photo').on('change', function() {

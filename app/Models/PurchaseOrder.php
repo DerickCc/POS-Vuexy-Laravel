@@ -37,6 +37,10 @@ class PurchaseOrder extends Model
         return $this->belongsTo(Supplier::class, 'supplier_id');
     }
 
+    function poDetail() {
+        return $this->hasMany(PurchaseOrderDetail::class, 'po_id');
+    }
+
     function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
