@@ -43,6 +43,6 @@ class ProductRequest extends FormRequest
 
     protected function formatPrice(string $price)
     {
-        return str_replace(',', '', $price);
+        return str_replace('.', '', $price);
     }
 }

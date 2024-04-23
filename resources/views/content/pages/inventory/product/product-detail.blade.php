@@ -111,6 +111,7 @@
                   type="text"
                   value="{{ old('stock', $edit->stock ?? '0.0') }}"
                   placeholder="Stok Barang"
+                  readonly
                 />
                 <div class="invalid-feedback">
                   @error('stock')

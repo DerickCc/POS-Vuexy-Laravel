@@ -33,9 +33,6 @@ $(function () {
     // set supplier
     $('#supplierId').append(`<option value='${poData.supplier_id.id}'>${poData.supplier_id.name}</option>`);
 
-    // select the supplier
-    $('#supplierId').val(poData.supplier_id.id).trigger('change');
-
     // set date
     const datetime = poData.purchase_date.split(' ');
     $('#purchaseDate').val(datetime.join('T'));
@@ -61,11 +58,6 @@ $(function () {
 
       // set Uom
       $(`#prdUom${i + 1}`).val(po_detail.product_id.uom);
-
-      // select the product
-      $(`#prdId${i + 1}`)
-        .val(po_detail.product_id.id)
-        .trigger('change');
 
       // set the purchase price
       $(`#prdPurchasePrice${i + 1}`).val(po_detail.purchase_price);
@@ -185,7 +177,6 @@ function addProductRow() {
               code: item.code,
               uom: item.uom,
               purchase_price: item.purchase_price,
-              selling_price: item.selling_price,
               remarks: item.remarks
             };
           })
@@ -257,6 +248,14 @@ function addProductRow() {
 
     calculateGrandTotal();
   });
+
+  // quantity
+  $(`#prdQuantity${idx}`).on('change', function () {
+    if ($(this).val() < 0) {
+      $(`#prdQuantity${idx}`).val(0);
+      toastr.warning(`Qty tidak boleh lebih kecil dari 0.`, 'Peringatan', { timeOut: 3500 });
+    }
+  });
 }
 
 $('#addProductRowBtn').on('click', function () {
@@ -265,11 +264,12 @@ $('#addProductRowBtn').on('click', function () {
 
 $('#submitBtn').on('click', function () {
   if ($('#supplierId').val() == null) {
+    toastr.warning('Mohon memilih Supplier', 'Peringatan', { timeOut: 2500 });
     $('#supplierId').addClass('invalid');
     return;
   }
 
-  const data = $('#POForm').serializeArray();
+  const data = $('#poForm').serializeArray();
   const detailData = [];
   var valid = true;
 
@@ -306,25 +306,20 @@ $('#submitBtn').on('click', function () {
           subItem.quantity === '0' ||
           subItem.quantity === ''
         ) {
+          toastr.warning('Barang, Harga Beli, dan Qty Barang harus diisi.', 'Peringatan', { timeOut: 2500 });
           valid = false;
           return;
         }
         subItem.purchase_price = subItem.purchase_price.replace(/\./g, '');
         subItem.total_price = subItem.total_price.replace(/\./g, '');
       });
-    } else {
-      if (item.name == 'supplier_id' && item.value == null) {
-        toastr.warning('Supplier harus diisi!', 'Peringatan', { timeOut: 2500 });
-        valid = false;
-        return;
-      }
     }
 
     formattedData[item.name] = item.value;
   });
 
   if (valid) {
-    fetch($('#POForm').attr('action'), {
+    fetch($('#poForm').attr('action'), {
       method: edit ? 'PUT' : 'POST',
       headers: {
         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
@@ -364,7 +359,5 @@ $('#submitBtn').on('click', function () {
           }
         });
       });
-  } else {
-    toastr.warning('Barang, Harga Beli, dan Kuantitas barang harus diisi.', 'Perhatian', 3500);
   }
 });

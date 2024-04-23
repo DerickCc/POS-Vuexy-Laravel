@@ -24,9 +24,8 @@ return new class extends Migration
             $table->integer('discount');
             $table->integer('grand_total');
             $table->integer('paid_amount');
-            $table->integer('return_amount');
             $table->string('remarks', 150)->nullable();
-            $table->string('status', 20)->default('Dalam Proses');
+            $table->string('status', 20);
             $table->foreignId('created_by')
                 ->nullable()
                 ->constrained('users', indexName: 'sales_orders_created_by_foreign')

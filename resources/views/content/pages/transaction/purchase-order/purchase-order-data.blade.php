@@ -4,7 +4,7 @@
 
 @extends('layouts/layoutMaster')
 
-@section('title', 'Transaksi Penjualan')
+@section('title', 'Transaksi Pembelian')
 
 <!-- Vendor Styles -->
 @section('vendor-style')
