@@ -4,7 +4,7 @@
 
 @extends('layouts/layoutMaster')
 
-@section('title', 'Transaksi Penbelian')
+@section('title', 'Transaksi Pembelian')
 
 <!-- Vendor Styles -->
 @section('vendor-style')
@@ -54,7 +54,7 @@
       </div>
     @endif
     <div class="card-body">
-      <form id="POForm"
+      <form id="poForm"
         action="{{ isset($edit) ? route('transaction-purchase-order.update', $edit->id) : (isset($view) ? '' : route('transaction-purchase-order.store')) }}"
         method="POST"
       >
@@ -79,18 +79,13 @@
           <div class="col-lg-4">
             <label class="form-label" for="purchaseDate">Tanggal Pembelian</label>
             <input
-              class="form-control @error('purchase_date') is-invalid @enderror"
+              class="form-control"
               id="purchaseDate"
               name="purchase_date"
               type="datetime-local"
               readonly
               placeholder="Tanggal Pembelian"
             />
-            <div class="invalid-feedback">
-              @error('purchase_date')
-                {{ $message }}
-              @enderror
-            </div>
           </div>
 
           <div class="col-lg-4">
@@ -107,7 +102,7 @@
               name="remarks"
               rows="4"
               placeholder="Keterangan"
-            >{{ old('remarks', $edit->remarks ?? '') }}</textarea>
+            >{{ old('remarks', $edit->remarks ?? $view->remarks ?? '') }}</textarea>
           </div>
         </div>
       </form>

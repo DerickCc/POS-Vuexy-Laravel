@@ -26,6 +26,7 @@ var poTable = $('#poDatatable').DataTable({
   processing: true,
   serverSide: true,
   scrollX: true,
+  scrollY: '415px',
   ajax: '/transaction/purchase-order/browse-po',
   columns: [
     {

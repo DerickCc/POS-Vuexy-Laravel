@@ -37,12 +37,12 @@ class PurchaseOrderController extends Controller
     public function browsePo(Request $request)
     {
         if ($request->ajax()) {
-            $customer = PurchaseOrder::query();
+            $po = PurchaseOrder::query();
 
             $orderCol = $this->columns[$request->input('order.0.column')];
             $orderDir = $request->input('order.0.dir');
 
-            return DataTables::eloquent($customer)
+            return DataTables::eloquent($po)
                 // add column
                 ->addColumn('action', function ($data) {
                     $hidden = $data->status == 'Selesai' ? 'hidden' : '';
@@ -83,7 +83,7 @@ class PurchaseOrderController extends Controller
                     return $data->purchase_date;
                 })
                 ->addColumn('supplier', function ($data) {
-                    return Supplier::findOrFail($data->supplier_id)->name;
+                    return $data->supplierId->name;
                 })
                 ->addColumn('grand_total', function ($data) {
                     return $data->grand_total;
@@ -205,7 +205,6 @@ class PurchaseOrderController extends Controller
     {
         $selectColumns = ['id', 'po_code', 'purchase_date', 'supplier_id', 'remarks', 'grand_total'];
         $edit = PurchaseOrder::select($selectColumns)->with('supplierId')->with('poDetail.productId')->findOrFail($id);
-        Log::error($edit);
         return view('content.pages.transaction.purchase-order.purchase-order-detail', compact('edit'));
     }
 

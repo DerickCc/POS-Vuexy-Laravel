@@ -96,7 +96,7 @@
           </div>
 
           <div class="col-lg-12">
-            <label class="form-label required" for="address">Alamat</label>
+            <label class="form-label" for="address">Alamat</label>
             <textarea
               class="form-control @error('address') is-invalid @enderror"
               id="address"

@@ -67,6 +67,7 @@ Route::middleware(['auth'])->group(function () {
       Route::get('/browse-product', 'browseProduct')->name('browse-product');     // '/inventory/product/browse-product'
       Route::get('/get-product-list', 'getProductList')->name('get-product-list'); // '/inventory/product/get-product-list'
       Route::get('/get-product-by-id', 'getProductById')->name('get-product-by-id'); // '/inventory/product/get-product-by-id'
+      Route::get('/get-product-stock', 'getProductStock')->name('get-product-stock'); // '/inventory/product/get-product-stock'
       Route::get('/create', 'create')->name('create');                            // '/inventory/product/create'
       Route::post('/store', 'store')->name('store');                              // '/inventory/product/store'
       Route::get('/{id}/edit', 'edit')->name('edit');                             // '/inventory/product/{id}/edit'
@@ -96,9 +97,9 @@ Route::middleware(['auth'])->group(function () {
       Route::get('/browse-so', 'browseSo')->name('browse-so');    // '/transaction/sales-order/browse-so'
       Route::get('/create', 'create')->name('create');            // '/transaction/sales-order/create'
       Route::post('/store', 'store')->name('store');              // '/transaction/sales-order/store'
-      Route::get('/{id}/edit', 'edit')->name('edit');             // '/transaction/sales-order/{id}/edit'
-      Route::put('/{id}/update', 'update')->name('update');       // '/transaction/sales-order/{id}/update'
-      Route::delete('/{id}/delete', 'delete')->name('delete');    // '/transaction/sales-order/{id}/delete'
+      Route::get('/{id}/view', 'view')->name('view');             // '/transaction/sales-order/{id}/edit'
+      Route::put('/{id}/update-paid-amount', 'updatePaidAmount')->name('update-paid-amount');       // '/transaction/sales-order/{id}/update-paid-amount'
+      Route::put('/{id}/cancel', 'cancel')->name('cancel');    // '/transaction/sales-order/{id}/cancel'
     });
   });
 

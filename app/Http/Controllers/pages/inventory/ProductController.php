@@ -134,6 +134,12 @@ class ProductController extends Controller
         return response()->json($product);
     }
 
+    public function getProductStock(Request $request) {
+        $product = Product::select('id', 'name', 'stock', 'uom')->findOrFail($request->input('id'));
+        Log::error($product);
+        return response()->json($product);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -156,7 +162,6 @@ class ProductController extends Controller
 
                 $product = Product::create([
                     'name' => $data['name'],
-                    'stock' => $data['stock'],
                     'uom' => $data['uom'],
                     'purchase_price' => $data['purchase_price'],
                     'selling_price' => $data['selling_price'],
@@ -207,7 +212,6 @@ class ProductController extends Controller
 
                 $product->update([
                     'name' => $data['name'],
-                    'stock' => $data['stock'],
                     'uom' => $data['uom'],
                     'purchase_price' => $data['purchase_price'],
                     'selling_price' => $data['selling_price'],
