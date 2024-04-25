@@ -5,6 +5,7 @@ namespace App\Http\Controllers\pages\inventory;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use App\Models\Product;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -21,6 +22,7 @@ class ProductController extends Controller
         'name',
         'stock',
         'uom',
+        'restock_threshold',
         'purchase_price',
         'selling_price',
         'remarks'
@@ -70,6 +72,9 @@ class ProductController extends Controller
                 })
                 ->addColumn('uom', function ($data) {
                     return $data->uom;
+                })
+                ->addColumn('restock_threshold', function ($data) {
+                    return $data->restock_threshold;
                 })
                 ->addColumn('purchase_price', function ($data) {
                     return $data->purchase_price;
@@ -128,16 +133,65 @@ class ProductController extends Controller
         return response()->json($productList);
     }
 
-    public function getProductById(Request $request) {
+    public function getProductById(Request $request)
+    {
         $product = Product::findOrFail($request->input('id'));
         Log::error($product);
         return response()->json($product);
     }
 
-    public function getProductStock(Request $request) {
+    public function getProductStock(Request $request)
+    {
         $product = Product::select('id', 'name', 'stock', 'uom')->findOrFail($request->input('id'));
         Log::error($product);
         return response()->json($product);
+    }
+
+    public function getTotalNewProduct(Request $request)
+    {
+        $period = $request->period;
+
+        switch ($period) {
+            case 'day':
+                $start = Carbon::now()->startOfDay();
+                $end = Carbon::now()->endOfDay();
+                break;
+            case 'week':
+                $start = Carbon::now()->startOfWeek();
+                $end = Carbon::now()->endOfWeek();
+                break;
+            case 'month':
+                $start = Carbon::now()->startOfMonth();
+                $end = Carbon::now()->endOfMonth();
+                break;
+            default:
+                return response()->json(['error' => 'Invalid Period'], 400);
+        }
+
+        $totalNewProduct = Product::whereBetween('created_at', [$start, $end])->count();
+        return response()->json(['total_new_product' => $totalNewProduct]);
+    }
+
+    public function browseLowStockProduct(Request $request)
+    {
+        if ($request->ajax()) {
+            $products = Product::where('stock', '<=', 'restock_threshold');
+
+            return DataTables::eloquent($products)
+                ->addColumn('name', function ($data) {
+                    return $data->name;
+                })
+                ->addColumn('stock', function ($data) {
+                    return $data->stock . ' ' . $data->uom;
+                })
+                ->make(true);
+        }
+    }
+
+    public function getTopProfitGeneratingProduct()
+    {
+        $topProducts = Product::with('salesOrderProductDetails')->get();
+        Log::error($topProducts);
     }
 
     /**
@@ -162,6 +216,7 @@ class ProductController extends Controller
 
                 $product = Product::create([
                     'name' => $data['name'],
+                    'restock_threshold' => $data['restock_threshold'],
                     'uom' => $data['uom'],
                     'purchase_price' => $data['purchase_price'],
                     'selling_price' => $data['selling_price'],
@@ -212,6 +267,7 @@ class ProductController extends Controller
 
                 $product->update([
                     'name' => $data['name'],
+                    'restock_threshold' => $data['restock_threshold'],
                     'uom' => $data['uom'],
                     'purchase_price' => $data['purchase_price'],
                     'selling_price' => $data['selling_price'],

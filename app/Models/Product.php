@@ -15,6 +15,7 @@ class Product extends Model
         'name',
         'photo',
         'stock',
+        'restock_threshold',
         'uom',
         'purchase_price',
         'selling_price',
@@ -32,6 +33,10 @@ class Product extends Model
             $product->code = 'PRD' . str_pad($product->id, 7, '0', STR_PAD_LEFT);
             $product->save();
         });
+    }
+
+    function salesOrderProductDetails() {
+        return $this->hasMany(SalesOrderProductDetail::class);
     }
 
     function createdBy(): BelongsTo

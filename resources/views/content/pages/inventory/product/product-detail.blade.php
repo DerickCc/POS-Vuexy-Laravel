@@ -102,13 +102,12 @@
                   @enderror
                 </div>
               </div>
-              <div class="col-6">
+              <div class="col-md-4">
                 <label class="form-label required" for="stock">Stok</label>
                 <input
                   class="form-control @error('stock') is-invalid @enderror"
                   id="stock"
                   name="stock"
-                  type="text"
                   value="{{ old('stock', $edit->stock ?? '0.0') }}"
                   placeholder="Stok Barang"
                   readonly
@@ -119,7 +118,23 @@
                   @enderror
                 </div>
               </div>
-              <div class="col-6">
+              <div class="col-md-4">
+                <label class="form-label required" for="restockThreshold">Ambang Batas Restok</label>
+                <input
+                  class="form-control @error('restock_threshold') is-invalid @enderror"
+                  id="restockThreshold"
+                  name="restock_threshold"
+                  type="text"
+                  value="{{ old('restock_threshold', $edit->restock_threshold ?? '0.0') }}"
+                  placeholder="Stok Barang"
+                />
+                <div class="invalid-feedback">
+                  @error('restock_threshold')
+                    {{ $message }}
+                  @enderror
+                </div>
+              </div>
+              <div class="col-md-4">
                 <label class="form-label required" for="uom">Satuan</label>
                 <input
                   class="form-control @error('uom') is-invalid @enderror"
@@ -135,13 +150,13 @@
                   @enderror
                 </div>
               </div>
-              <div class="col-6">
-                <label class="form-label required" for="purchase_price">Harga Beli</label>
+              <div class="col-md-6">
+                <label class="form-label required" for="purchasePrice">Harga Beli</label>
                 <div class="input-group">
                   <span class="input-group-text">Rp</span>
                   <input
                     class="form-control @error('purchase_price') is-invalid @enderror"
-                    id="purchase_price"
+                    id="purchasePrice"
                     name="purchase_price"
                     type="text"
                     value="{{ old('purchase_price', $edit->purchase_price ?? 0) }}"
@@ -154,13 +169,13 @@
                   </div>
                 </div>
               </div>
-              <div class="col-6">
-                <label class="form-label required" for="selling_price">Harga Jual</label>
+              <div class="col-md-6">
+                <label class="form-label required" for="sellingPrice">Harga Jual</label>
                 <div class="input-group">
                   <span class="input-group-text">Rp</span>
                   <input
                     class="form-control @error('selling_price') is-invalid @enderror"
-                    id="selling_price"
+                    id="sellingPrice"
                     name="selling_price"
                     type="text"
                     value="{{ old('selling_price', $edit->selling_price ?? 0) }}"

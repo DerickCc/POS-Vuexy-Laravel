@@ -23,6 +23,8 @@ const vendorJsFiles = GetFilesArray('resources/assets/vendor/js/*.js');
 // Processing Libs JS Files
 const LibsJsFiles = GetFilesArray('resources/assets/vendor/libs/**/*.js');
 
+const CustomJsFiles = GetFilesArray('resources/assets/vendor/js/custom/**/*.js');
+
 /**
  * Scss Files
  */
@@ -61,6 +63,7 @@ export default defineConfig({
         ...pageJsFiles,
         ...vendorJsFiles,
         ...LibsJsFiles,
+        ...CustomJsFiles,
         'resources/js/laravel-user-management.js', // Processing Laravel User Management CRUD JS File
         ...CoreScssFiles,
         ...LibsScssFiles,

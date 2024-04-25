@@ -85,83 +85,94 @@ $(function () {
     $('input[name="payment_type"]').prop('disabled', true);
     $('input[name="payment_type"]').css('opacity', 1);
 
-    var totalProductPrice = 0;
-    // set product detail
-    soData.so_product_detail.forEach((prd_detail, i) => {
-      totalProductPrice += prd_detail.total_price;
-      console.log(prd_detail);
-      addProductRow();
+    if (soData.so_product_detail.length > 0) {
+      var totalProductPrice = 0;
+      // set product detail
+      soData.so_product_detail.forEach((prd_detail, i) => {
+        totalProductPrice += prd_detail.total_price;
+        console.log(prd_detail);
+        addProductRow();
 
-      // set so product detail id
-      $(`#soPrdDetail${i + 1}`).val(prd_detail.id);
+        // set so product detail id
+        $(`#soPrdDetail${i + 1}`).val(prd_detail.id);
 
-      // set product
-      $(`#prdId${i + 1}`).append(`<option value='${prd_detail.product_id.id}'>${prd_detail.product_id.name}</option>`);
+        // set product
+        $(`#prdId${i + 1}`).append(
+          `<option value='${prd_detail.product_id.id}'>${prd_detail.product_id.name}</option>`
+        );
 
-      // set ori selling price
-      $(`#prdOriSellingPrice${i + 1}`).val(prd_detail.ori_selling_price);
+        // set ori selling price
+        $(`#prdOriSellingPrice${i + 1}`).val(prd_detail.ori_selling_price);
 
-      // set selling price
-      $(`#prdSellingPrice${i + 1}`).val(prd_detail.selling_price);
-      formatToCurrency($(`#prdSellingPrice${i + 1}`));
+        // set selling price
+        $(`#prdSellingPrice${i + 1}`).val(prd_detail.selling_price);
+        formatToCurrency($(`#prdSellingPrice${i + 1}`));
 
-      // set Uom
-      $(`#prdUom${i + 1}`).text(prd_detail.product_id.uom);
+        // set Uom
+        $(`#prdUom${i + 1}`).text(prd_detail.product_id.uom);
 
-      // set the quantity
-      $(`#prdQuantity${i + 1}`).val(prd_detail.quantity);
+        // set the quantity
+        $(`#prdQuantity${i + 1}`).val(prd_detail.quantity);
 
-      // set the total
-      $(`#prdTotal${i + 1}`).val(prd_detail.total_price);
-      formatToCurrency($(`#prdTotal${i + 1}`));
+        // set the total
+        $(`#prdTotal${i + 1}`).val(prd_detail.total_price);
+        formatToCurrency($(`#prdTotal${i + 1}`));
 
-      // set disabled, readonly, and hidden
-      $(`#prdId${i + 1}`).prop('disabled', true);
-      $(`#prdSellingPrice${i + 1}`).prop('readonly', true);
-      $(`#prdQuantity${i + 1}`).prop('readonly', true);
+        // set disabled, readonly, and hidden
+        $(`#prdId${i + 1}`).prop('disabled', true);
+        $(`#prdSellingPrice${i + 1}`).prop('readonly', true);
+        $(`#prdQuantity${i + 1}`).prop('readonly', true);
 
-      $(`#deleteProductRow${i + 1}`).removeClass('cursor-pointer');
-      $(`#deleteProductRow${i + 1}`).addClass('text-muted');
-    });
+        $(`#deleteProductRow${i + 1}`).removeClass('cursor-pointer');
+        $(`#deleteProductRow${i + 1}`).addClass('text-muted');
+      });
 
-    // set total product price
-    $('#totalProductPrice').val(totalProductPrice);
+      // set total product price
+      $('#totalProductPrice').val(totalProductPrice);
+    } else {
+      $('#soProductDetails').hide();
+    }
 
-    var totalServicePrice = 0;
-    // set service detail
-    soData.so_service_detail.forEach((svc_detail, i) => {
-      totalServicePrice += svc_detail.total_price;
-      console.log(svc_detail);
-      addServiceRow();
-
-      // set so service detail id
-      $(`#soSvcDetail${i + 1}`).val(svc_detail.id);
-
-      // set service
-      $(`#svcName${i + 1}`).val(svc_detail.service_name);
-
-      // set the selling price
-      $(`#svcSellingPrice${i + 1}`).val(svc_detail.selling_price);
-      formatToCurrency($(`#svcSellingPrice${i + 1}`));
-
-      // set the quantity
-      $(`#svcQuantity${i + 1}`).val(svc_detail.quantity);
-
-      // set the total
-      $(`#svcTotal${i + 1}`).val(svc_detail.total_price);
-      formatToCurrency($(`#svcTotal${i + 1}`));
-
-      // set disabled, readonly, and hidden
-      $(`#svcName${i + 1}`).prop('disabled', true);
-      $(`#svcSellingPrice${i + 1}`).prop('readonly', true);
-      $(`#svcQuantity${i + 1}`).prop('readonly', true);
-
-      $(`#deleteServiceRow${i + 1}`).removeClass('cursor-pointer');
-      $(`#deleteServiceRow${i + 1}`).addClass('text-muted');
-    });
-
-    // set total service price
-    $('#totalServicePrice').val(totalServicePrice);
+    if (soData.so_service_detail.length > 0) {
+      var totalServicePrice = 0;
+      // set service detail
+      soData.so_service_detail.forEach((svc_detail, i) => {
+        totalServicePrice += svc_detail.total_price;
+        console.log(svc_detail);
+        addServiceRow();
+  
+        // set so service detail id
+        $(`#soSvcDetail${i + 1}`).val(svc_detail.id);
+  
+        // set service
+        $(`#svcName${i + 1}`).val(svc_detail.service_name);
+  
+        // set the selling price
+        $(`#svcSellingPrice${i + 1}`).val(svc_detail.selling_price);
+        formatToCurrency($(`#svcSellingPrice${i + 1}`));
+  
+        // set the quantity
+        $(`#svcQuantity${i + 1}`).val(svc_detail.quantity);
+  
+        // set the total
+        $(`#svcTotal${i + 1}`).val(svc_detail.total_price);
+        formatToCurrency($(`#svcTotal${i + 1}`));
+  
+        // set disabled, readonly, and hidden
+        $(`#svcName${i + 1}`).prop('disabled', true);
+        $(`#svcSellingPrice${i + 1}`).prop('readonly', true);
+        $(`#svcQuantity${i + 1}`).prop('readonly', true);
+  
+        $(`#deleteServiceRow${i + 1}`).removeClass('cursor-pointer');
+        $(`#deleteServiceRow${i + 1}`).addClass('text-muted');
+      });
+  
+      // set total service price
+      $('#totalServicePrice').val(totalServicePrice);
+    }
+    else {
+      $('#soServiceDetails').hide();
+    }
 
     // set detail service
   } else {
@@ -608,4 +619,95 @@ $('#submitBtn').on('click', function () {
         });
       });
   }
+});
+
+// Payment Modal
+$(document).on('click', '#openPaymentModalBtn', function () {
+  var soCodeM = view.so_code;
+  var grandTotalM = view.grand_total;
+  var paidAmountM = view.paid_amount;
+
+  $('#soCodeM').val(soCodeM);
+  $('#grandTotalM').val(grandTotalM);
+  $('#paidAmountM').val(paidAmountM);
+  $('#shouldBePaidM').val(grandTotalM - paidAmountM);
+
+  formatToCurrency('#grandTotalM');
+  formatToCurrency('#paidAmountM');
+  formatToCurrency('#shouldBePaidM');
+  formatToCurrency('#paymentAmountM');
+
+  $('#paymentAmountM').on('keyup change', function () {
+    const paymentAmount = $(this).val().replace(/\./g, '');
+
+    if (paymentAmount > grandTotalM - paidAmountM) {
+      $('#paymentAmountM').val($('#shouldBePaidM').val());
+      return;
+    } else if (paymentAmount < 0) {
+      $('#paymentAmountM').val(0);
+      return;
+    }
+
+    $('#paymentLeftM').val(grandTotalM - paidAmountM - paymentAmount);
+    formatToCurrency('#paymentLeftM');
+  });
+
+  // Show the payment modal
+  $('#paymentModal').modal('show');
+});
+
+// submit modal
+$('#submitPaymentModalBtn').on('click', function () {
+  Swal.fire({
+    title: 'Cek Sekali Lagi!',
+    text: 'Pastikan jumlah yang dibayarkan telah sesuai.',
+    icon: 'warning',
+    confirmButtonText: 'Simpan',
+    customClass: {
+      confirmButton: 'btn btn-warning me-3 waves-effect waves-light',
+      cancelButton: 'btn btn-label-secondary waves-effect waves-light'
+    }
+  }).then(confirm => {
+    // if confirm
+    if (confirm.isConfirmed) {
+      const csrf_token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      const paidAmount = $('#paymentAmountM').val().replace(/\./g, '');
+      const soId = view.id;
+
+      $.ajax({
+        url: `/transaction/sales-order/${soId}/update-paid-amount`,
+        type: 'PUT',
+        headers: {
+          'X-CSRF-TOKEN': csrf_token
+        },
+        data: {
+          paid_amount: paidAmount
+        },
+        success: function (res) {
+          $('#paymentModal').modal('hide');
+
+          Swal.fire({
+            title: 'Success',
+            text: 'Pembayaran Berhasil Disimpan',
+            icon: 'success',
+            customClass: {
+              confirmButton: 'btn btn-primary me waves-effect waves-light'
+            }
+          }).then(() => {
+            history.back();
+          });
+        },
+        error: function (xhr, status, e) {
+          Swal.fire({
+            title: 'Error',
+            text: e,
+            icon: 'error',
+            customClass: {
+              confirmButton: 'btn btn-primary me waves-effect waves-light'
+            }
+          });
+        }
+      });
+    }
+  });
 });

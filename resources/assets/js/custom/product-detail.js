@@ -8,13 +8,31 @@ function formatToCurrency(id) {
   });
 }
 
-if ($('#purchase_price')) {
-  formatToCurrency($('#purchase_price'));
+$('#restockThreshold').on('keyup', function () {
+  if ($('#restockThreshold').val() < 0) {
+    $('#restockThreshold').val(0.0);
+  }
+})
+
+if ($('#purchasePrice')) {
+  formatToCurrency($('#purchasePrice'));
 }
 
-if ($('#selling_price')) {
-  formatToCurrency($('#selling_price'));
+$('#purchasePrice').on('keyup', function () {
+  if ($('#purchasePrice').val() < 0) {
+    $('#purchasePrice').val(0);
+  }
+})
+
+if ($('#sellingPrice')) {
+  formatToCurrency($('#sellingPrice'));
 }
+
+$('#sellingPrice').on('keyup', function () {
+  if ($('#sellingPrice').val() < 0) {
+    $('#sellingPrice').val(0);
+  }
+})
 
 $('#photo').on('change', function() {
   if (this.files && this.files[0]) {

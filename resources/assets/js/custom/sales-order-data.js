@@ -49,10 +49,6 @@ var soTable = $('#soDatatable').DataTable({
       name: 'so_code'
     },
     {
-      data: 'created_by',
-      name: 'created_by'
-    },
-    {
       data: 'sales_date',
       name: 'sales_date',
       render: function (data, type, row) {
@@ -106,6 +102,10 @@ var soTable = $('#soDatatable').DataTable({
         };
         return `<span class="d-flex justify-content-center badge rounded-pill bg-label-${color[data]}">${data}</span>`;
       }
+    },
+    {
+      data: 'created_by',
+      name: 'created_by'
     },
     {
       data: 'remarks',

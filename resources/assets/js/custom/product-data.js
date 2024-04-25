@@ -41,6 +41,10 @@ var prdTable = $('#productDatatable').DataTable({
       name: 'uom'
     },
     {
+      data: 'restock_threshold',
+      name: 'restock_threshold'
+    },
+    {
       data: 'purchase_price',
       name: 'purchase_price',
       render: function (data, type, row) {

@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\SalesOrder;
 use App\Models\SalesOrderProductDetail;
 use App\Models\SalesOrderServiceDetail;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -19,13 +20,13 @@ class SalesOrderController extends Controller
         'action',
         'so_code',
         'sales_date',
-        'created_by', // kasir
         'customer',
         'sub_total',
         'discount',
         'grand_total',
         'paid_amount',
         'status',
+        'created_by', // kasir
         'remarks'
     ];
 
@@ -84,9 +85,6 @@ class SalesOrderController extends Controller
                 ->addColumn('so_code', function ($data) {
                     return $data->so_code;
                 })
-                ->addColumn('created_by', function ($data) {
-                    return $data->createdBy->name;
-                })
                 ->addColumn('sales_date', function ($data) {
                     return $data->sales_date;
                 })
@@ -107,6 +105,9 @@ class SalesOrderController extends Controller
                 })
                 ->addColumn('status', function ($data) {
                     return $data->status;
+                })
+                ->addColumn('created_by', function ($data) {
+                    return $data->createdBy->name;
                 })
                 ->addColumn('remarks', function ($data) {
                     return $data->remarks ? $data->remarks : '-';
@@ -144,6 +145,56 @@ class SalesOrderController extends Controller
                 ->order(function ($query) use ($orderCol, $orderDir) {
                     $query->orderBy($orderCol, $orderDir); // Order by the specified column
                 })
+                ->make(true);
+        }
+    }
+
+    public function getTotalSales(Request $request) {
+        $period = $request->period;
+        
+        switch ($period) {
+            case 'day':
+                $start = Carbon::now()->startOfDay();
+                $end = Carbon::now()->endOfDay();
+                break;
+            case 'week':
+                $start = Carbon::now()->startOfWeek();
+                $end = Carbon::now()->endOfWeek();
+                break;
+            case 'month':
+                $start = Carbon::now()->startOfMonth();
+                $end = Carbon::now()->endOfMonth();
+                break;
+            default:
+                return response()->json(['error' => 'Invalid Period'], 400);
+        }
+
+        $totalSales = SalesOrder::whereBetween('created_at', [$start, $end])->sum('grand_total');
+        return response()->json(['total_sales' => $totalSales]);
+    }
+
+    public function browseIncompletePayment(Request $request) {
+        if ($request->ajax()) {
+            $so = SalesOrder::where('status', 'Belum Lunas');
+
+            return DataTables::eloquent($so)
+                ->addColumn('so_code', function ($data) {
+                    return '
+                    <a class="text-danger" href="' . route('transaction-sales-order.view', $data->id) . '">
+                        ' . $data->so_code . '
+                    </a>
+                    ';
+                })
+                ->addColumn('customer', function ($data) {
+                    return $data->customerId->name;
+                })
+                ->addColumn('grand_total', function ($data) {
+                    return $data->grand_total;
+                })
+                ->addColumn('paid_amount', function ($data) {
+                    return $data->paid_amount;
+                })
+                ->rawColumns(['so_code'])
                 ->make(true);
         }
     }
