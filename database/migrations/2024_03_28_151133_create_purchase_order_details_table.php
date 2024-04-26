@@ -31,7 +31,7 @@ return new class extends Migration
                 ->restrictOnDelete(); // prevent delete if there are related rows
             $table->foreignId('updated_by')
                 ->nullable()
-                ->constrained('users', indexName: 'purchase_orders_details_updated_by_foreign')
+                ->constrained('users', indexName: 'purchase_order_details_updated_by_foreign')
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
             $table->timestamps();

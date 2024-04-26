@@ -4,6 +4,7 @@ namespace App\Http\Controllers\pages\transaction;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\ProductStockDetail;
 use App\Models\SalesOrder;
 use App\Models\SalesOrderProductDetail;
 use App\Models\SalesOrderServiceDetail;
@@ -149,9 +150,10 @@ class SalesOrderController extends Controller
         }
     }
 
-    public function getTotalSales(Request $request) {
+    public function getTotalSales(Request $request)
+    {
         $period = $request->period;
-        
+
         switch ($period) {
             case 'day':
                 $start = Carbon::now()->startOfDay();
@@ -173,7 +175,8 @@ class SalesOrderController extends Controller
         return response()->json(['total_sales' => $totalSales]);
     }
 
-    public function browseIncompletePayment(Request $request) {
+    public function browseIncompletePayment(Request $request)
+    {
         if ($request->ajax()) {
             $so = SalesOrder::where('status', 'Belum Lunas');
 
@@ -261,7 +264,28 @@ class SalesOrderController extends Controller
                     $product->update([
                         'stock' => $product['stock'] - $detail['quantity'],
                     ]);
+
+                    // stock reduction
+                    $productStock = ProductStockDetail::select('id', 'quantity')
+                        ->where('product_id', $detail['product_id'])
+                        ->where('quantity', '>', 0)
+                        ->get();
+
+                    $soldQuantity = $detail['quantity'];
+                    foreach ($productStock as $stockDetail) {
+                        if ($stockDetail->quantity >= $soldQuantity) {
+                            Log::error('sikat tipis');
+                            Log::error($soldQuantity);
+                            break;
+                        } else {
+                            Log::error('sikat abis, lanjut lg');
+                            $soldQuantity = $soldQuantity - $stockDetail->quantity;
+                            Log::error($soldQuantity);
+                        }
+                    }
+                    Log::error($productStock);
                 }
+                throw ('sa');
 
                 foreach ($data['so_service_detail'] as $detail) {
                     $sod = SalesOrderServiceDetail::create([
@@ -305,7 +329,7 @@ class SalesOrderController extends Controller
         try {
             DB::transaction(function () use ($data, $id) {
                 $so = SalesOrder::where('id', $id)?->lockForUpdate()->first();
-                
+
                 $so->update([
                     'paid_amount' => $so['paid_amount'] + $data['paid_amount']
                 ]);
@@ -335,7 +359,7 @@ class SalesOrderController extends Controller
                     $product = Product::where('id', $detail['product_id'])?->lockForUpdate()->first();
                     $product->update([
                         'stock' => $product['stock'] + $detail['quantity']
-                    ]);             
+                    ]);
                 }
 
                 $so->update([

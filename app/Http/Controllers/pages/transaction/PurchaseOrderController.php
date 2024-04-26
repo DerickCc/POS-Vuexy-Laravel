@@ -4,6 +4,7 @@ namespace App\Http\Controllers\pages\transaction;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\ProductStockDetail;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderDetail;
 use App\Models\Supplier;
@@ -134,7 +135,8 @@ class PurchaseOrderController extends Controller
         }
     }
 
-    public function getTotalOnGoingPo() {
+    public function getTotalOnGoingPo()
+    {
         $totalOnGoingPo = PurchaseOrder::where('status', 'Dalam Proses')->count();
         return response()->json(['total_on_going_po' => $totalOnGoingPo]);
     }
@@ -288,6 +290,12 @@ class PurchaseOrderController extends Controller
                     $product = Product::where('id', $detail['product_id'])?->lockForUpdate()->first();
                     $product->update([
                         'stock' => $product['stock'] + $detail['quantity']
+                    ]);
+
+                    ProductStockDetail::create([
+                        'product_id' => $detail['product_id'],
+                        'purchase_price' => $detail['purchase_price'],
+                        'quantity' => $detail['quantity'],
                     ]);
                 }
 
