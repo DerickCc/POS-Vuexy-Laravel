@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('code', 20)->nullable()->unique();
             $table->string('photo', 100)->nullable();
             $table->decimal('stock', $precision = 10, $scale = 2)->default(0.0);
+            $table->decimal('restock_threshold', $precision = 10, $scale = 2)->default(0.0);
             $table->string('uom', 50);
             $table->integer('purchase_price');
             $table->integer('selling_price');

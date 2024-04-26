@@ -51,6 +51,7 @@ Route::middleware(['auth'])->group(function () {
       Route::get('/', 'index')->name('index');                                      // '/master/customer/'
       Route::get('/browse-customer', 'browseCustomer')->name('browse-customer');    // '/master/customer/browse-customer'
       Route::get('/get-customer-list', 'getCustomerList')->name('get-customer-list');    // '/master/customer/get-customer-list'
+      Route::get('/get-total-new-customer', 'getTotalNewCustomer')->name('get-total-new-customer');    // '/master/customer/get-total-new-customer'
       Route::get('/create', 'create')->name('create');                              // '/master/customer/create'
       Route::post('/store', 'store')->name('store');                                // '/master/customer/store'
       Route::get('/{id}/edit', 'edit')->name('edit');                               // '/master/customer/{id}/edit'
@@ -68,6 +69,9 @@ Route::middleware(['auth'])->group(function () {
       Route::get('/get-product-list', 'getProductList')->name('get-product-list'); // '/inventory/product/get-product-list'
       Route::get('/get-product-by-id', 'getProductById')->name('get-product-by-id'); // '/inventory/product/get-product-by-id'
       Route::get('/get-product-stock', 'getProductStock')->name('get-product-stock'); // '/inventory/product/get-product-stock'
+      Route::get('/get-total-new-product', 'getTotalNewProduct')->name('get-total-new-product');    // '/master/product/get-total-new-customer'
+      Route::get('/browse-low-stock-product', 'browseLowStockProduct')->name('browse-low-stock-product');     // '/inventory/product/browse-low-stock-product'
+      Route::get('/get-top-profit-generating-product', 'getTopProfitGeneratingProduct')->name('get-top-profit-generating-product'); // '/inventory/product/get-top-profit-generating-product'
       Route::get('/create', 'create')->name('create');                            // '/inventory/product/create'
       Route::post('/store', 'store')->name('store');                              // '/inventory/product/store'
       Route::get('/{id}/edit', 'edit')->name('edit');                             // '/inventory/product/{id}/edit'
@@ -82,6 +86,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('/purchase-order')->controller(PurchaseOrderController::class)->name('transaction-purchase-order.')->group(function () {
       Route::get('/', 'index')->name('index');                    // '/transaction/purchase-order/'
       Route::get('/browse-po', 'browsePo')->name('browse-po');    // '/transaction/purchase-order/browse-po'
+      Route::get('/get-total-on-going-po', 'GetTotalOnGoingPo')->name('get-total-on-going-po');    // '/transaction/purchase-order/get-total-on-going-po'
       Route::get('/create', 'create')->name('create');            // '/transaction/purchase-order/create'
       Route::post('/store', 'store')->name('store');              // '/transaction/purchase-order/store'
       Route::get('/{id}/view', 'view')->name('view');             // '/transaction/purchase-order/{id}/view'
@@ -95,6 +100,8 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('/sales-order')->controller(SalesOrderController::class)->name('transaction-sales-order.')->group(function () {
       Route::get('/', 'index')->name('index');                    // '/transaction/sales-order/'
       Route::get('/browse-so', 'browseSo')->name('browse-so');    // '/transaction/sales-order/browse-so'
+      Route::get('/get-total-sales', 'GetTotalSales')->name('get-total-sales');    // '/transaction/purchase-order/get-total-sales'
+      Route::get('/browse-incomplete-payment', 'browseIncompletePayment')->name('browse-incomplete-payment');    // '/transaction/sales-order/browse-incomplete-payment'
       Route::get('/create', 'create')->name('create');            // '/transaction/sales-order/create'
       Route::post('/store', 'store')->name('store');              // '/transaction/sales-order/store'
       Route::get('/{id}/view', 'view')->name('view');             // '/transaction/sales-order/{id}/edit'
@@ -120,9 +127,6 @@ Route::middleware(['auth'])->group(function () {
   // // locale
   // Route::get('lang/{locale}', [LanguageController::class, 'swap']);
 });
-
-// Page Error or Not Found
-Route::get('/pages/misc-error', [MiscError::class, 'index'])->name('pages-misc-error');
 
 // authentication
 Route::get('/login', [LoginController::class, 'index'])->name('login');

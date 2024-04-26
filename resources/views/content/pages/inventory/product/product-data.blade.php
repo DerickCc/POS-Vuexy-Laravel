@@ -100,6 +100,7 @@
             <th>Nama Barang</th> <!-- 3 -->
             <th>Stok</th> <!-- 4 -->
             <th>Satuan</th> <!-- 5 -->
+            <th>Batas Restok</th>
             <th>Harga Beli</th>
             <th>Harga Jual</th>
             <th>Keterangan</th>

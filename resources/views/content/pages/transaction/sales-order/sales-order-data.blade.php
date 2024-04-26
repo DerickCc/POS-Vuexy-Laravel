@@ -53,7 +53,7 @@
         </div>
         <div class="col-lg-3 mb-4">
           <label class="form-label" for="customerId">Customer</label>
-          <select class="select2 form-select dt-input" id="customerId" data-column="4" data-allow-clear="true">
+          <select class="select2 form-select dt-input" id="customerId" data-column="3" data-allow-clear="true">
           </select>
         </div>
         <div class="col-lg-3 mb-4">
@@ -66,11 +66,11 @@
         </div>
         <div class="col-lg-3 mb-4">
           <label class="form-label" for="status">Status</label>
-          <select class="selectpicker dt-input w-100" data-column="9" data-style="btn-default">
+          <select class="selectpicker dt-input w-100" data-column="8" data-style="btn-default">
             <option value="Semua">Semua</option>
             <option value="Belum Lunas">Belum Lunas</option>
             <option value="Lunas">Lunas</option>
-            <option value="Dibatalkan">Batal</option>
+            <option value="Batal">Batal</option>
           </select>
         </div>
       </div>
@@ -89,14 +89,13 @@
   @endif
 
   <div class="card">
-    <div class="text-nowrap table-responsive">
+    <div class="text-nowrap">
       <table class="table table-hover" id="soDatatable">
         <thead style="background:
         #8f8da852">
           <tr>
             <th class="text-center" style="max-width: 50px">Aksi</th>
             <th width="10%">No. Invoice</th>
-            <th width="17%">Kasir</th>
             <th width="17%">Tanggal Penjualan</th>
             <th>Pelanggan</th>
             <th width="5%">Sub Total</th>
@@ -104,6 +103,7 @@
             <th width="5%">Grand Total</th>
             <th width="15%">Dibayar</th>
             <th class="text-center" width="10%">Status</th>
+            <th width="17%">Kasir</th>
             <th>Keterangan</th>
           </tr>
         </thead>

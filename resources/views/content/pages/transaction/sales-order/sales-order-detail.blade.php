@@ -109,7 +109,7 @@
     {{-- table card --}}
     <div class="col-lg-9">
       <div class="row g-4">
-        <div class="col-12">
+        <div class="col-12" id="soProductDetails">
           <div class="card">
             <div class="card-header d-flex align-items-center justify-content-between">
               <h4 class="card-title my-auto">
@@ -166,7 +166,7 @@
           </div>
         </div>
 
-        <div class="col-12">
+        <div class="col-12" id="soServiceDetails">
           <div class="card">
             <div class="card-header d-flex align-items-center justify-content-between">
               <h4 class="card-title my-auto">
@@ -310,12 +310,17 @@
               <button class="btn btn-success float-end" id="submitBtn" type="button"
                 @if (isset($view)) style="display: none !important;" @endif
               >Simpan</button>
+              <button id="openPaymentModalBtn" type="button" hidden
+                @if (isset($view) && $view->status == 'Belum Lunas') class="btn btn-warning float-end" @endif
+              >Bayar</button>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+  @include('content.pages.transaction.sales-order.modal.payment-modal')
 @endsection
 
 <script>

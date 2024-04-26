@@ -5,6 +5,7 @@ namespace App\Http\Controllers\pages\master;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CustomerRequest;
 use App\Models\Customer;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -102,6 +103,31 @@ class CustomerController extends Controller
         $customerList = $customerList->get();
 
         return response()->json($customerList);
+    }
+
+    public function getTotalNewCustomer(Request $request)
+    {
+        $period = $request->period;
+
+        switch ($period) {
+            case 'day':
+                $start = Carbon::now()->startOfDay();
+                $end = Carbon::now()->endOfDay();
+                break;
+            case 'week':
+                $start = Carbon::now()->startOfWeek();
+                $end = Carbon::now()->endOfWeek();
+                break;
+            case 'month':
+                $start = Carbon::now()->startOfMonth();
+                $end = Carbon::now()->endOfMonth();
+                break;
+            default:
+                return response()->json(['error' => 'Invalid Period'], 400);
+        }
+
+        $totalNewCustomer = Customer::whereBetween('created_at', [$start, $end])->count();
+        return response()->json(['total_new_customer' => $totalNewCustomer]);
     }
 
     /**

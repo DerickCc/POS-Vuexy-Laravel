@@ -134,6 +134,11 @@ class PurchaseOrderController extends Controller
         }
     }
 
+    public function getTotalOnGoingPo() {
+        $totalOnGoingPo = PurchaseOrder::where('status', 'Dalam Proses')->count();
+        return response()->json(['total_on_going_po' => $totalOnGoingPo]);
+    }
+
     /**
      * Show the form for creating a new resource.
      */

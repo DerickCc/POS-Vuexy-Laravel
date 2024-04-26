@@ -25,6 +25,7 @@ class ProductRequest extends FormRequest
             'name' => 'required|string|max:100',
             'photo' => 'nullable|image|mimes:jpeg,jpg,png,svg|max:2048',
             'stock' => 'nullable|numeric',
+            'restock_threshold' => 'nullable|numeric',
             'uom' => 'required|string|max:50',
             'purchase_price' => 'required|numeric',
             'selling_price' => 'required|numeric',
