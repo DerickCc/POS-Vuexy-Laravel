@@ -3,9 +3,7 @@
 use App\Http\Controllers\authentications\LoginController;
 use App\Http\Controllers\authentications\LogoutController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\language\LanguageController;
 use App\Http\Controllers\pages\DashboardController;
-use App\Http\Controllers\pages\MiscError;
 use App\Http\Controllers\authentications\RegisterController;
 use App\Http\Controllers\pages\master\CustomerController;
 use App\Http\Controllers\pages\master\SupplierController;
@@ -29,7 +27,7 @@ Route::middleware(['auth'])->group(function () {
   // Main Page Route
   //----------------
   // Dashboard
-  Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard'); // name utk slug ny menu
+  Route::get('/', [DashboardController::class, 'index'])->name('dashboard'); // name utk slug ny menu
 
   // Master
   Route::prefix('/master')->group(function () {

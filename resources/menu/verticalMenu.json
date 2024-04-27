@@ -2,7 +2,7 @@
     "menu": [
         {
             "name": "Dashboard",
-            "url": "/dashboard",
+            "url": "/",
             "slug": "dashboard",
             "icon": "menu-icon tf-icons ti ti-smart-home"
         },

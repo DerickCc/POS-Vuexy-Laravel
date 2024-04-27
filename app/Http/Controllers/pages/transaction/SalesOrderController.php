@@ -8,6 +8,7 @@ use App\Models\ProductStockDetail;
 use App\Models\SalesOrder;
 use App\Models\SalesOrderProductDetail;
 use App\Models\SalesOrderServiceDetail;
+use App\Models\StockReduction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -171,19 +172,19 @@ class SalesOrderController extends Controller
                 return response()->json(['error' => 'Invalid Period'], 400);
         }
 
-        $totalSales = SalesOrder::whereBetween('created_at', [$start, $end])->sum('grand_total');
+        $totalSales = SalesOrder::whereBetween('created_at', [$start, $end])->where('status', '!=', 'Batal')->sum('grand_total');
         return response()->json(['total_sales' => $totalSales]);
     }
 
     public function browseIncompletePayment(Request $request)
     {
         if ($request->ajax()) {
-            $so = SalesOrder::where('status', 'Belum Lunas');
+            $so = SalesOrder::select('id', 'so_code', 'customer_id', 'grand_total', 'paid_amount')->with('customerId')->where('status', 'Belum Lunas');
 
             return DataTables::eloquent($so)
                 ->addColumn('so_code', function ($data) {
                     return '
-                    <a class="text-danger" href="' . route('transaction-sales-order.view', $data->id) . '">
+                    <a href="' . route('transaction-sales-order.view', $data->id) . '">
                         ' . $data->so_code . '
                     </a>
                     ';
@@ -272,20 +273,48 @@ class SalesOrderController extends Controller
                         ->get();
 
                     $soldQuantity = $detail['quantity'];
+                    $totalPurchasePrice = 0;
                     foreach ($productStock as $stockDetail) {
-                        if ($stockDetail->quantity >= $soldQuantity) {
-                            Log::error('sikat tipis');
-                            Log::error($soldQuantity);
+                        $psd = ProductStockDetail::where('id', $stockDetail->id)?->lockForUpdate()->first();
+
+                        // if stock is more than qty that customer bought
+                        if ($psd->quantity >= $soldQuantity) {
+                            StockReduction::create([
+                                'product_stock_detail_id' => $psd->id,
+                                'so_product_detail_id' => $sod->id,
+                                'quantity' => $soldQuantity
+                            ]);
+
+                            $psd->update([
+                                'quantity' => $psd->quantity - $soldQuantity
+                            ]);
+
+                            $totalPurchasePrice += $soldQuantity * $psd->purchase_price;
+
                             break;
-                        } else {
-                            Log::error('sikat abis, lanjut lg');
-                            $soldQuantity = $soldQuantity - $stockDetail->quantity;
-                            Log::error($soldQuantity);
+                        }
+                        // if stock is less than qty that customer bought
+                        else {
+                            StockReduction::create([
+                                'product_stock_detail_id' => $psd->id,
+                                'so_product_detail_id' => $sod->id,
+                                'quantity' => $psd->quantity
+                            ]);
+
+                            $soldQuantity = $soldQuantity - $psd->quantity;
+                            $totalPurchasePrice += $psd->quantity * $psd->purchase_price;
+                            
+                            $psd->update([
+                                'quantity' => 0
+                            ]);
                         }
                     }
-                    Log::error($productStock);
+
+                    // profit
+                    $sod->update([
+                        'profit' => $sod->total_price - $totalPurchasePrice,
+                    ]);
                 }
-                throw ('sa');
 
                 foreach ($data['so_service_detail'] as $detail) {
                     $sod = SalesOrderServiceDetail::create([
@@ -354,12 +383,21 @@ class SalesOrderController extends Controller
             DB::transaction(function () use ($id) {
                 $so = SalesOrder::where('id', $id)?->lockForUpdate()->first();
                 $soProductDetail = $so->soProductDetail;
-                Log::error($soProductDetail);
+
                 foreach ($soProductDetail as $detail) {
                     $product = Product::where('id', $detail['product_id'])?->lockForUpdate()->first();
                     $product->update([
                         'stock' => $product['stock'] + $detail['quantity']
                     ]);
+
+                    $stockReduction = SalesOrderProductDetail::find($detail->id)->stockReduction;
+
+                    foreach ($stockReduction as $reduced) {
+                        $psd = ProductStockDetail::where('id', $reduced->product_stock_detail_id)?->lockForUpdate()->first();
+                        $psd->update([
+                            'quantity' => $psd['quantity'] + $reduced['quantity']
+                        ]);
+                    }
                 }
 
                 $so->update([

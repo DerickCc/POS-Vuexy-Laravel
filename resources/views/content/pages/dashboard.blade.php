@@ -24,9 +24,9 @@
 @section('content')
   <h4>Dashboard</h4>
 
-  <div class="row mb-4">
+  <div class="row">
     {{-- new customer card --}}
-    <div class="col-lg-3 col-md-6">
+    <div class="col-lg-3 col-md-6 mb-4">
       <div class="card card-border-shadow-info">
         <div class="card-body">
           <div class="d-flex align-items-center mb-2 pb-1">
@@ -43,7 +43,7 @@
     </div>
 
     {{-- new product card --}}
-    <div class="col-lg-3 col-md-6">
+    <div class="col-lg-3 col-md-6 mb-4">
       <div class="card card-border-shadow-primary">
         <div class="card-body">
           <div class="d-flex align-items-center mb-2 pb-1">
@@ -60,7 +60,7 @@
     </div>
 
     {{-- total sales card --}}
-    <div class="col-lg-3 col-md-6">
+    <div class="col-lg-3 col-md-6 mb-4">
       <div class="card card-border-shadow-success">
         <div class="card-body">
           <div class="d-flex align-items-center mb-2 pb-1">
@@ -77,7 +77,7 @@
     </div>
 
     {{-- on going po card --}}
-    <div class="col-lg-3 col-md-6">
+    <div class="col-lg-3 col-md-6 mb-4">
       <div class="card card-border-shadow-danger">
         <div class="card-body">
           <div class="d-flex align-items-center mb-2 pb-1">
@@ -94,53 +94,47 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-7">
-      <div class="row">
-        <div class="col-12 mb-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="mb-0 d-flex align-items-center">
-                <i class="ti ti-alert-triangle ti-md me-2 text-warning"></i>
-                Barang dengan Total Keuntungan Tertinggi
-              </h5>
-            </div>
-
-
-          </div>
-        </div>
-
-        {{-- Incomplete Payment Table --}}
-        <div class="col-12">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="mb-0 d-flex align-items-center">
-                <i class="ti ti-cash-banknote ti-lg me-2 text-danger"></i>
-                Transaksi Penjualan Belum Lunas
-              </h5>
-            </div>
-
-            <div class="text-nowrap">
-              <table class="table table-hover" id="incompletePaymentDatatable">
-                <thead style="background:
-                #8f8da852">
-                  <tr>
-                    <th>No. Invoice</th>
-                    <th>Pelanggan</th>
-                    <th>Grand Total</th>
-                    <th>Dibayar</th>
-                  </tr>
-                </thead>
-              </table>
-            </div>
-          </div>
+  <div class="row g-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="mb-0 d-flex align-items-center">
+            <i class="ti ti-award ti-lg me-2 text-warning"></i>
+            Barang dengan Total Keuntungan Tertinggi
+          </h5>
+          <div id="topProfitGeneratingProductChart"></div>
         </div>
       </div>
+    </div>
 
+    <div class="col-lg-7">
+      {{-- Incomplete Payment Table --}}
+      <div class="card">
+        <div class="card-body">
+          <h5 class="mb-0 d-flex align-items-center">
+            <i class="ti ti-cash-banknote ti-md me-2 text-danger"></i>
+            Transaksi Penjualan Belum Lunas
+          </h5>
+        </div>
+
+        <div class="text-nowrap">
+          <table class="table table-hover" id="incompletePaymentDatatable">
+            <thead style="background:
+                #8f8da852">
+              <tr>
+                <th>No. Invoice</th>
+                <th>Pelanggan</th>
+                <th>Grand Total</th>
+                <th>Dibayar</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+      </div>
     </div>
 
     {{-- Low Stock Table --}}
-    <div class="col-5">
+    <div class="col-lg-5">
       <div class="card">
         <div class="card-body">
           <h5 class="mb-0 d-flex align-items-center">

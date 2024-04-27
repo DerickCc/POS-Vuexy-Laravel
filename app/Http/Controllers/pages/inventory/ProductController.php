@@ -175,7 +175,7 @@ class ProductController extends Controller
     public function browseLowStockProduct(Request $request)
     {
         if ($request->ajax()) {
-            $products = Product::where('stock', '<=', 'restock_threshold');
+            $products = Product::select('id', 'name', 'stock', 'uom')->whereColumn('stock', '<=', 'restock_threshold');
 
             return DataTables::eloquent($products)
                 ->addColumn('name', function ($data) {
@@ -190,8 +190,21 @@ class ProductController extends Controller
 
     public function getTopProfitGeneratingProduct()
     {
-        $topProducts = Product::with('salesOrderProductDetails')->get();
-        Log::error($topProducts);
+        $products = Product::select('id', 'name')
+            ->with(['salesOrderProductDetails' => function ($query) {
+                $query->select('id', 'product_id', 'quantity', 'profit')->whereHas('soId', function ($subQuery) {
+                    $subQuery->where('status', '!=', 'Batal');
+                });
+            }])
+            ->get();
+
+        $products->each(function ($product) {
+            $product->total_profit = $product->salesOrderProductDetails->sum('profit');
+            $product->total_sold_quantity = $product->salesOrderProductDetails->sum('quantity');
+            unset($product->salesOrderProductDetails);
+        });
+
+        return $products->sortByDesc('total_profit')->values()->take(10);
     }
 
     /**

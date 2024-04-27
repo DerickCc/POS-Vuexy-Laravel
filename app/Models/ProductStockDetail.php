@@ -14,4 +14,8 @@ class ProductStockDetail extends Model
         'purchase_price',
         'quantity',
     ];
+
+    function stockReduction() {
+        return $this->hasMany(StockReduction::class, 'product_stock_detail_id');
+    }
 }
