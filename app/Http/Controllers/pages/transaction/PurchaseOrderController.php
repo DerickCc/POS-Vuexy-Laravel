@@ -4,6 +4,7 @@ namespace App\Http\Controllers\pages\transaction;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\ProductStockDetail;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderDetail;
 use App\Models\Supplier;
@@ -104,7 +105,7 @@ class PurchaseOrderController extends Controller
                 })
                 ->filterColumn('supplier', function ($query, $keyword) {
                     if ($keyword != 'null') {
-                        $query->where('supplier_id', 'like',  $keyword);
+                        $query->where('supplier_id', '=',  $keyword);
                     }
                 })
                 ->filterColumn('purchase_date', function ($query, $keyword) {
@@ -121,7 +122,7 @@ class PurchaseOrderController extends Controller
                         ->whereDate('purchase_date', '<=', $endDate);
                 })
                 ->filterColumn('status', function ($query, $keyword) {
-                    if ($keyword != 'Semua') $query->where('status', 'like', $keyword);
+                    if ($keyword != 'Semua') $query->where('status', '=', $keyword);
                 })
 
                 ->rawColumns(['action'])
@@ -134,9 +135,65 @@ class PurchaseOrderController extends Controller
         }
     }
 
-    public function getTotalOnGoingPo() {
+    public function getTotalOnGoingPo()
+    {
         $totalOnGoingPo = PurchaseOrder::where('status', 'Dalam Proses')->count();
         return response()->json(['total_on_going_po' => $totalOnGoingPo]);
+    }
+
+    public function export(Request $request)
+    {
+        $filter = $request->all();
+
+        $exportData = PurchaseOrder::select('id', 'po_code', 'purchase_date', 'supplier_id', 'total_item', 'grand_total', 'status')
+            ->with(['poDetail' => function ($query) {
+                $query->select('id', 'po_id', 'product_id', 'purchase_price', 'quantity', 'total_price');
+            }]);
+
+        if (isset($filter['po_code'])) {
+            $exportData->where('po_code', 'LIKE', '%' . $filter['po_code'] . '%');
+        }
+
+        if (isset($filter['supplier_id'])) {
+            $exportData->where('supplier_id', '=', $filter['supplier_id']);
+        }
+
+        if (isset($filter['start_date']) && isset($filter['end_date'])) {
+            list($startDay, $startMonth, $startYear) = explode('-', $filter['start_date']);
+            $startDate = "$startYear-$startMonth-$startDay";
+
+            list($endDay, $endMonth, $endYear) = explode('-', $filter['end_date']);
+            $endDate = "$endYear-$endMonth-$endDay";
+
+            $exportData
+                ->whereDate('purchase_date', '>=', $startDate)
+                ->whereDate('purchase_date', '<=', $endDate);
+        }
+
+        if ($filter['status'] != 'Semua') {
+            $exportData->where('status', '=',  $filter['status']);
+        }
+
+        $exportData = $exportData->get();
+
+        $exportData->each(function ($po) {
+            $po->supplier_name = $po->supplierId->name;
+            unset($po->supplierId);
+            unset($po->id);
+            unset($po->supplier_id);
+
+            $po->poDetail->each(function ($detail) {
+                $detail->product_name = $detail->productId->name;
+                $detail->product_uom = $detail->productId->uom;
+                unset($detail->productId);
+                unset($detail->id);
+                unset($detail->po_id);
+                unset($detail->product_id);
+
+            });
+        });
+
+        return $exportData;
     }
 
     /**
@@ -288,6 +345,12 @@ class PurchaseOrderController extends Controller
                     $product = Product::where('id', $detail['product_id'])?->lockForUpdate()->first();
                     $product->update([
                         'stock' => $product['stock'] + $detail['quantity']
+                    ]);
+
+                    ProductStockDetail::create([
+                        'product_id' => $detail['product_id'],
+                        'purchase_price' => $detail['purchase_price'],
+                        'quantity' => $detail['quantity'],
                     ]);
                 }
 

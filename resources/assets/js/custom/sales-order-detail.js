@@ -216,11 +216,6 @@ $('#customerId').on('change', function () {
   }
 });
 
-// paid amount
-if ($(`#paidAmount`)) {
-  formatToCurrency($(`#paidAmount`));
-}
-
 function addProductRow() {
   productRowIndex += 1;
 
@@ -348,6 +343,9 @@ function addProductRow() {
 
     calculateTotalProductPrice();
     calculatePayment();
+
+    $('#paidAmount').val(0);
+    $('input[name="payment_type"][value="DP"]').prop('checked', true);
   });
 
   // quantity
@@ -453,6 +451,9 @@ function addServiceRow() {
 
     calculateTotalServicePrice();
     calculatePayment();
+
+    $('#paidAmount').val(0);
+    $('input[name="payment_type"][value="DP"]').prop('checked', true);
   });
 
   // quantity
@@ -476,6 +477,28 @@ $('input[name="payment_type"]').on('change', function () {
     $('#paidAmount').val($('#grandTotal').val());
   } else {
     $('#paidAmount').prop('readonly', false);
+    $('#paidAmount').val(0);
+  }
+});
+
+// sub total
+if ($(`#subTotal`)) {
+  formatToCurrency($(`#subTotal`));
+}
+
+// paid amount
+if ($(`#paidAmount`)) {
+  formatToCurrency($(`#paidAmount`));
+}
+
+$('#paidAmount').on('keyup', function () {
+  const grandTotal = +$('#grandTotal').val().replace(/\./g, '');
+  const paidAmount = +$(this).val().replace(/\./g, '');
+
+  if (paidAmount >= grandTotal) {
+    $(this).val($('#grandTotal').val());
+    $('input[name="payment_type"][value="Lunas"]').prop('checked', true);
+    $('#paidAmount').prop('readonly', true);
   }
 });
 

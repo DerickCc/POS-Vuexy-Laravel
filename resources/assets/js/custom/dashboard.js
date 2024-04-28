@@ -89,8 +89,57 @@ function getTopProfitGeneratingProduct() {
       'X-CSRF-TOKEN': csrfToken
     },
     success: function (res) {
-      console.log(res)
+      var chartData = res.map(function (item) {
+        return {
+          x: item.name,
+          y: item.total_profit / 1000000,
+          sold_quantity: `(Terjual ${item.total_sold_quantity} ${item.uom})`
+        }
+      });
 
+      var options = {
+        chart: {
+          type: 'bar',
+          height: 400
+        },
+        series: [{
+          name: 'Total Keuntungan',
+          data: chartData.map(item => item.y)
+        }],
+        xaxis: {
+          categories: chartData.map(item => item.x)
+        },
+        plotOptions: {
+          bar: {
+            horizontal: false,
+            columnWidth: '45%',
+            endingShape: 'rounded'
+          },
+        },
+        stroke: {
+          show: true,
+          width: 2,
+          colors: ['transparent']
+        },
+        yaxis: {
+          title: {
+            text: 'Rupiah (Juta)'
+          }
+        },
+        fill: {
+          opacity: 1
+        },
+        tooltip: {
+          y: {
+            formatter: function (val, i) {
+              return "Rp " + val.toLocaleString('id-ID') + " juta " + chartData[i.dataPointIndex].sold_quantity
+            }
+          }
+        }
+      }
+
+      var chart = new ApexCharts(document.querySelector('#topProfitGeneratingProductChart'), options);
+      chart.render();
     },
     error: function (xhr, status, e) {
       toastr.error('Gagal memuat Barang dengan Total Keuntungan Tertinggi', 'Error');

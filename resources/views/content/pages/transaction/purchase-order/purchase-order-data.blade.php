@@ -66,7 +66,7 @@
         </div>
         <div class="col-lg-3 mb-4">
           <label class="form-label" for="status">Status</label>
-          <select class="selectpicker dt-input w-100" data-column="6" data-style="btn-default">
+          <select class="selectpicker dt-input w-100" id="status" data-column="6" data-style="btn-default">
             <option value="Semua">Semua</option>
             <option value="Dalam Proses">Dalam Proses</option>
             <option value="Selesai">Selesai</option>

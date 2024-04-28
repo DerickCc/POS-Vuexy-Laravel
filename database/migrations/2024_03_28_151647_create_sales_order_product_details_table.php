@@ -25,6 +25,7 @@ return new class extends Migration
             $table->integer('selling_price');
             $table->decimal('quantity', $precision = 10, $scale = 2);
             $table->integer('total_price');
+            $table->integer('profit')->default(0);
             $table->foreignId('created_by')
                 ->nullable()
                 ->constrained('users', indexName: 'sales_order_product_details_created_by_foreign')

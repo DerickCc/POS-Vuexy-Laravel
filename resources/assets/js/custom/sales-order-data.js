@@ -1,3 +1,7 @@
+import ExcelJS from 'exceljs';
+import { Workbook, Worksheet } from 'exceljs';
+import fs from 'file-saver';
+
 function formatToCurrency(id) {
   new Cleave($(id), {
     numeral: true,
@@ -124,8 +128,11 @@ var soTable = $('#soDatatable').DataTable({
   dom: '<"row"<"px-4 my-2 col-12"l>tr<"px-4 my-1 col-md-6"i><"px-4 mt-1 mb-3 col-md-6"p>>' // Customizing the layout
 });
 
-var addButton = $('<a class="btn btn-primary float-end" href="sales-order/create">Tambah</a>');
-$('.dataTables_length').append(addButton);
+var exportAndAddButton = $(`
+  <a class="btn btn-primary float-end ms-3" href="sales-order/create">Tambah</a>
+  <a class="btn btn-success float-end export" href="sales-order/export">Export</a>
+`);
+$('.dataTables_length').append(exportAndAddButton);
 
 if ($('#startDate') && $('#endDate')) {
   $('#startDate').flatpickr({
@@ -318,4 +325,266 @@ $('#paymentModal').on('hidden.bs.modal', function () {
   $('#paymentLeftM').val(0);
   soId = 0;
   console.log('hidden');
+});
+
+// export
+$('.export').on('click', function (e) {
+  e.preventDefault();
+  const action = $(this).attr('href');
+  const csrf_token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+  $.ajax({
+    url: action,
+    type: 'GET',
+    data: {
+      so_code: $('#soCode').val(),
+      customer_id: $('#customerId').val(),
+      start_date: $('#startDate').val(),
+      end_date: $('#endDate').val(),
+      status: $('#status').val()
+    },
+    headers: {
+      'X-CSRF-TOKEN': csrf_token
+    },
+    success: function (res) {
+      console.log(res);
+
+      const reportDate =
+        $('#startDate').val() && $('#endDate').val() ? $('#startDate').val() + ' - ' + $('#endDate').val() : '';
+
+      const title = 'Laporan Transaksi Pembelian ' + (reportDate ? `(${reportDate})` : '');
+
+      const wb = new Workbook();
+      const ws = wb.addWorksheet(title);
+
+      // title
+      ws.addRow([title]).eachCell(cell => {
+        cell.font = {
+          size: 16,
+          bold: true,
+          underline: true
+        };
+      });
+
+      ws.addRow([]);
+
+      // headers
+      const headerRow = ws.addRow([
+        'No. Invoice',
+        'Tanggal Penjualan',
+        'Pelanggan',
+        'Jenis Pembayaran',
+        'Sub Total',
+        'Diskon',
+        'Grand Total',
+        'Telah Dibayar',
+        'Status',
+        'Barang / Jasa',
+        'Harga Jual',
+        'Qty',
+        'Total Harga',
+        'Keuntungan'
+      ]);
+
+      headerRow.font = { bold: true, size: 12 };
+      headerRow.alignment = {
+        horizontal: 'center',
+        vertical: 'middle'
+      };
+      headerRow.eachCell(cell => {
+        cell.border = {
+          top: { style: 'thin' },
+          bottom: { style: 'thin' },
+          left: { style: 'thin' },
+          right: { style: 'thin' }
+        };
+        cell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FFFFFF00' },
+          bgColor: { argb: 'FF0000FF' }
+        };
+      });
+
+      res.forEach((so, i) => {
+        // so row
+        ws.addRow([
+          so.so_code,
+          so.sales_date,
+          so.customer_name,
+          so.payment_type,
+          'Rp ' + so.sub_total.toLocaleString('id-ID'),
+          'Rp ' + so.discount.toLocaleString('id-ID'),
+          'Rp ' + so.grand_total.toLocaleString('id-ID'),
+          'Rp ' + so.paid_amount.toLocaleString('id-ID'),
+          so.status,
+          '',
+          '',
+          '',
+          '',
+          ''
+        ]).eachCell((cell, colNum) => {
+          if (i % 2 == 0) {
+            cell.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: 'fff2f2f2' }
+            };
+          } else {
+            cell.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: 'ffeeece1' }
+            };
+          }
+
+          if (colNum < 10) {
+            cell.border = {
+              top: { style: 'thin' },
+              bottom: { style: 'thin' },
+              left: { style: 'thin' },
+              right: { style: 'thin' }
+            };
+          }
+          // border for the rightmost side of table
+          if (colNum == 14) {
+            cell.border = {
+              right: { style: 'thin' }
+            };
+          }
+        });
+
+        // product detail rows
+        so.so_product_detail.forEach((detail, j) => {
+          ws.addRow([
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            detail.product_name,
+            'Rp ' + detail.selling_price.toLocaleString('id-ID'),
+            detail.quantity + ' ' + detail.product_uom,
+            'Rp ' + detail.total_price.toLocaleString('id-ID'),
+            'Rp ' + detail.profit.toLocaleString('id-ID')
+          ]).eachCell((cell, colNum) => {
+            if (i % 2 == 0) {
+              cell.fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: { argb: 'fff2f2f2' }
+              };
+            } else {
+              cell.fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: { argb: 'ffeeece1' }
+              };
+            }
+
+            if (colNum >= 10) {
+              cell.border = {
+                top: { style: 'thin' },
+                bottom: { style: 'thin' },
+                left: { style: 'thin' },
+                right: { style: 'thin' }
+              };
+            }
+            // border for the bottom of table
+            else if (colNum < 10 && i == res.length - 1 && j == so.so_product_detail.length - 1 && so.so_service_detail.length == 0) {
+              cell.border = {
+                bottom: { style: 'thin' }
+              };
+            }
+          });
+        });
+
+        // service detail rows
+        so.so_service_detail.forEach((detail, k) => {
+          ws.addRow([
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            detail.service_name,
+            'Rp ' + detail.selling_price.toLocaleString('id-ID'),
+            detail.quantity,
+            'Rp ' + detail.total_price.toLocaleString('id-ID'),
+            'Rp ' + detail.total_price.toLocaleString('id-ID')
+          ]).eachCell((cell, colNum) => {
+            if (i % 2 == 0) {
+              cell.fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: { argb: 'fff2f2f2' }
+              };
+            } else {
+              cell.fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: { argb: 'ffeeece1' }
+              };
+            }
+
+            if (colNum >= 10) {
+              cell.border = {
+                top: { style: 'thin' },
+                bottom: { style: 'thin' },
+                left: { style: 'thin' },
+                right: { style: 'thin' }
+              };
+            }
+            // border for the bottom of table
+            else if (colNum < 10 && i == res.length - 1 && k == so.so_service_detail.length - 1) {
+              cell.border = {
+                bottom: { style: 'thin' }
+              };
+            }
+          });
+        });
+      });
+
+      ws.getColumn(1).width = 13;
+      ws.getColumn(2).width = 20;
+      ws.getColumn(3).width = 20;
+      ws.getColumn(4).width = 18;
+      ws.getColumn(5).width = 15;
+      ws.getColumn(6).width = 15;
+      ws.getColumn(7).width = 15;
+      ws.getColumn(8).width = 15;
+      ws.getColumn(9).width = 11;
+      // detail
+      ws.getColumn(10).width = 20;
+      ws.getColumn(11).width = 15;
+      ws.getColumn(12).width = 12;
+      ws.getColumn(13).width = 15;
+      ws.getColumn(14).width = 15;
+
+      wb.xlsx.writeBuffer().then(buffer => {
+        const data = new Blob([buffer], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        });
+        fs.saveAs(data, title + '.xlsx');
+      });
+    },
+    error: function (xhr, status, e) {
+      Swal.fire({
+        title: 'Error',
+        text: 'Export Gagal: ' + e,
+        icon: 'error',
+        customClass: {
+          confirmButton: 'btn btn-primary me waves-effect waves-light'
+        }
+      });
+    }
+  });
 });

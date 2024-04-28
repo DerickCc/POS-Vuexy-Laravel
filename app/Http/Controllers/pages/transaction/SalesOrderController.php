@@ -4,9 +4,11 @@ namespace App\Http\Controllers\pages\transaction;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\ProductStockDetail;
 use App\Models\SalesOrder;
 use App\Models\SalesOrderProductDetail;
 use App\Models\SalesOrderServiceDetail;
+use App\Models\StockReduction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -149,9 +151,10 @@ class SalesOrderController extends Controller
         }
     }
 
-    public function getTotalSales(Request $request) {
+    public function getTotalSales(Request $request)
+    {
         $period = $request->period;
-        
+
         switch ($period) {
             case 'day':
                 $start = Carbon::now()->startOfDay();
@@ -169,18 +172,19 @@ class SalesOrderController extends Controller
                 return response()->json(['error' => 'Invalid Period'], 400);
         }
 
-        $totalSales = SalesOrder::whereBetween('created_at', [$start, $end])->sum('grand_total');
+        $totalSales = SalesOrder::whereBetween('created_at', [$start, $end])->where('status', '!=', 'Batal')->sum('grand_total');
         return response()->json(['total_sales' => $totalSales]);
     }
 
-    public function browseIncompletePayment(Request $request) {
+    public function browseIncompletePayment(Request $request)
+    {
         if ($request->ajax()) {
-            $so = SalesOrder::where('status', 'Belum Lunas');
+            $so = SalesOrder::select('id', 'so_code', 'customer_id', 'grand_total', 'paid_amount')->with('customerId')->where('status', 'Belum Lunas');
 
             return DataTables::eloquent($so)
                 ->addColumn('so_code', function ($data) {
                     return '
-                    <a class="text-danger" href="' . route('transaction-sales-order.view', $data->id) . '">
+                    <a href="' . route('transaction-sales-order.view', $data->id) . '">
                         ' . $data->so_code . '
                     </a>
                     ';
@@ -197,6 +201,63 @@ class SalesOrderController extends Controller
                 ->rawColumns(['so_code'])
                 ->make(true);
         }
+    }
+
+    public function export(Request $request)
+    {
+        $filter = $request->all();
+
+        $exportData = SalesOrder::select('id', 'so_code', 'sales_date', 'customer_id', 'payment_type', 'sub_total', 'discount', 'grand_total', 'paid_amount', 'status')
+            ->with(['soProductDetail' => function ($query) {
+                $query->select('id', 'so_id', 'product_id', 'selling_price', 'quantity', 'total_price', 'profit');
+            }, 'soServiceDetail' => function ($query) {
+                $query->select('id', 'so_id', 'service_name', 'selling_price', 'quantity', 'total_price');
+            }]);
+
+        if (isset($filter['so_code'])) {
+            $exportData->where('so_code', 'LIKE', '%' . $filter['so_code'] . '%');
+        }
+
+        if (isset($filter['customer_id'])) {
+            $exportData->where('customer_id', '=', $filter['customer_id']);
+        }
+
+        if (isset($filter['start_date']) && isset($filter['end_date'])) {
+            list($startDay, $startMonth, $startYear) = explode('-', $filter['start_date']);
+            $startDate = "$startYear-$startMonth-$startDay";
+
+            list($endDay, $endMonth, $endYear) = explode('-', $filter['end_date']);
+            $endDate = "$endYear-$endMonth-$endDay";
+
+            $exportData
+                ->whereDate('sales_date', '>=', $startDate)
+                ->whereDate('sales_date', '<=', $endDate);
+        }
+
+        if ($filter['status'] != 'Semua') {
+            $exportData->where('status', '=',  $filter['status']);
+        }
+
+        $exportData = $exportData->get();
+
+        $exportData->each(function ($so) {
+            $so->customer_name = $so->customerId->name;
+            unset($so->customerId);
+            unset($so->id);
+            unset($so->customer_id);
+
+            $so->soProductDetail->each(function ($detail) {
+                $detail->product_name = $detail->productId->name;
+                $detail->product_uom = $detail->productId->uom;
+
+                unset($detail->productId);
+                unset($detail->id);
+                unset($detail->so_id);
+                unset($detail->product_id);
+            });
+        });
+
+        return $exportData;
     }
 
     /**
@@ -261,6 +322,55 @@ class SalesOrderController extends Controller
                     $product->update([
                         'stock' => $product['stock'] - $detail['quantity'],
                     ]);
+
+                    // stock reduction
+                    $productStock = ProductStockDetail::select('id', 'quantity')
+                        ->where('product_id', $detail['product_id'])
+                        ->where('quantity', '>', 0)
+                        ->get();
+
+                    $soldQuantity = $detail['quantity'];
+                    $totalPurchasePrice = 0;
+                    foreach ($productStock as $stockDetail) {
+                        $psd = ProductStockDetail::where('id', $stockDetail->id)?->lockForUpdate()->first();
+
+                        // if stock is more than qty that customer bought
+                        if ($psd->quantity >= $soldQuantity) {
+                            StockReduction::create([
+                                'product_stock_detail_id' => $psd->id,
+                                'so_product_detail_id' => $sod->id,
+                                'quantity' => $soldQuantity
+                            ]);
+
+                            $psd->update([
+                                'quantity' => $psd->quantity - $soldQuantity
+                            ]);
+
+                            $totalPurchasePrice += $soldQuantity * $psd->purchase_price;
+
+                            break;
+                        }
+                        // if stock is less than qty that customer bought
+                        else {
+                            StockReduction::create([
+                                'product_stock_detail_id' => $psd->id,
+                                'so_product_detail_id' => $sod->id,
+                                'quantity' => $psd->quantity
+                            ]);
+
+                            $soldQuantity = $soldQuantity - $psd->quantity;
+                            $totalPurchasePrice += $psd->quantity * $psd->purchase_price;
+
+                            $psd->update([
+                                'quantity' => 0
+                            ]);
+                        }
+                    }
+
+                    // profit
+                    $sod->update([
+                        'profit' => $sod->total_price - $totalPurchasePrice,
+                    ]);
                 }
 
                 foreach ($data['so_service_detail'] as $detail) {
@@ -305,7 +415,7 @@ class SalesOrderController extends Controller
         try {
             DB::transaction(function () use ($data, $id) {
                 $so = SalesOrder::where('id', $id)?->lockForUpdate()->first();
-                
+
                 $so->update([
                     'paid_amount' => $so['paid_amount'] + $data['paid_amount']
                 ]);
@@ -330,12 +440,21 @@ class SalesOrderController extends Controller
             DB::transaction(function () use ($id) {
                 $so = SalesOrder::where('id', $id)?->lockForUpdate()->first();
                 $soProductDetail = $so->soProductDetail;
-                Log::error($soProductDetail);
+
                 foreach ($soProductDetail as $detail) {
                     $product = Product::where('id', $detail['product_id'])?->lockForUpdate()->first();
                     $product->update([
                         'stock' => $product['stock'] + $detail['quantity']
-                    ]);             
+                    ]);
+
+                    $stockReduction = SalesOrderProductDetail::find($detail->id)->stockReduction;
+
+                    foreach ($stockReduction as $reduced) {
+                        $psd = ProductStockDetail::where('id', $reduced->product_stock_detail_id)?->lockForUpdate()->first();
+                        $psd->update([
+                            'quantity' => $psd['quantity'] + $reduced['quantity']
+                        ]);
+                    }
                 }
 
                 $so->update([

@@ -17,6 +17,7 @@ class SalesOrderProductDetail extends Model
         'selling_price',
         'quantity',
         'total_price',
+        'profit',
         'created_by',
         'updated_by',
     ];
@@ -29,6 +30,10 @@ class SalesOrderProductDetail extends Model
     function productId(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id');
+    }
+
+    function stockReduction() {
+        return $this->hasMany(StockReduction::class, 'so_product_detail_id');
     }
 
     function createdBy(): BelongsTo

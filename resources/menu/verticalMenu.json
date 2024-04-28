@@ -2,7 +2,7 @@
     "menu": [
         {
             "name": "Dashboard",
-            "url": "/dashboard",
+            "url": "/",
             "slug": "dashboard",
             "icon": "menu-icon tf-icons ti ti-smart-home"
         },
@@ -49,23 +49,6 @@
                     "url": "/transaction/sales-order",
                     "name": "Penjualan",
                     "slug": "transaction-sales-order"
-                }
-            ]
-        },
-        {
-            "name": "Laporan",
-            "slug": "report",
-            "icon": "menu-icon tf-icons ti ti-file",
-            "submenu": [
-                {
-                    "url": "/report/purchase-report",
-                    "name": "Pembelian",
-                    "slug": "report-purchase-report"
-                },
-                {
-                    "url": "/report/sales-report",
-                    "name": "Penjualan",
-                    "slug": "report-sales-report"
                 }
             ]
         },
