@@ -203,6 +203,63 @@ class SalesOrderController extends Controller
         }
     }
 
+    public function export(Request $request)
+    {
+        $filter = $request->all();
+
+        $exportData = SalesOrder::select('id', 'so_code', 'sales_date', 'customer_id', 'payment_type', 'sub_total', 'discount', 'grand_total', 'paid_amount', 'status')
+            ->with(['soProductDetail' => function ($query) {
+                $query->select('id', 'so_id', 'product_id', 'selling_price', 'quantity', 'total_price', 'profit');
+            }, 'soServiceDetail' => function ($query) {
+                $query->select('id', 'so_id', 'service_name', 'selling_price', 'quantity', 'total_price');
+            }]);
+
+        if (isset($filter['so_code'])) {
+            $exportData->where('so_code', 'LIKE', '%' . $filter['so_code'] . '%');
+        }
+
+        if (isset($filter['customer_id'])) {
+            $exportData->where('customer_id', '=', $filter['customer_id']);
+        }
+
+        if (isset($filter['start_date']) && isset($filter['end_date'])) {
+            list($startDay, $startMonth, $startYear) = explode('-', $filter['start_date']);
+            $startDate = "$startYear-$startMonth-$startDay";
+
+            list($endDay, $endMonth, $endYear) = explode('-', $filter['end_date']);
+            $endDate = "$endYear-$endMonth-$endDay";
+
+            $exportData
+                ->whereDate('sales_date', '>=', $startDate)
+                ->whereDate('sales_date', '<=', $endDate);
+        }
+
+        if ($filter['status'] != 'Semua') {
+            $exportData->where('status', '=',  $filter['status']);
+        }
+
+        $exportData = $exportData->get();
+
+        $exportData->each(function ($so) {
+            $so->customer_name = $so->customerId->name;
+            unset($so->customerId);
+            unset($so->id);
+            unset($so->customer_id);
+
+            $so->soProductDetail->each(function ($detail) {
+                $detail->product_name = $detail->productId->name;
+                $detail->product_uom = $detail->productId->uom;
+
+                unset($detail->productId);
+                unset($detail->id);
+                unset($detail->so_id);
+                unset($detail->product_id);
+            });
+        });
+
+        return $exportData;
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -303,7 +360,7 @@ class SalesOrderController extends Controller
 
                             $soldQuantity = $soldQuantity - $psd->quantity;
                             $totalPurchasePrice += $psd->quantity * $psd->purchase_price;
-                            
+
                             $psd->update([
                                 'quantity' => 0
                             ]);

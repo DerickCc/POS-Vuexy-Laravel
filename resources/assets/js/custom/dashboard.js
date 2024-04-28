@@ -1,6 +1,3 @@
-import ApexCharts from 'apexcharts';
-import 'apexcharts/dist/apexcharts.css';
-
 const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 function getTotalNewCustomer(period) {
@@ -92,15 +89,13 @@ function getTopProfitGeneratingProduct() {
       'X-CSRF-TOKEN': csrfToken
     },
     success: function (res) {
-      console.log(res)
       var chartData = res.map(function (item) {
         return {
           x: item.name,
           y: item.total_profit / 1000000,
-          sold_quantity: item.total_sold_quantity
+          sold_quantity: `(Terjual ${item.total_sold_quantity} ${item.uom})`
         }
       });
-      console.log(chartData)
 
       var options = {
         chart: {
@@ -117,7 +112,7 @@ function getTopProfitGeneratingProduct() {
         plotOptions: {
           bar: {
             horizontal: false,
-            columnWidth: '55%',
+            columnWidth: '45%',
             endingShape: 'rounded'
           },
         },
@@ -136,8 +131,8 @@ function getTopProfitGeneratingProduct() {
         },
         tooltip: {
           y: {
-            formatter: function (val) {
-              return "Rp " + val.toLocaleString('id-ID') + " juta"
+            formatter: function (val, i) {
+              return "Rp " + val.toLocaleString('id-ID') + " juta " + chartData[i.dataPointIndex].sold_quantity
             }
           }
         }

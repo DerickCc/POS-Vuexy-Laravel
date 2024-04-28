@@ -53,23 +53,6 @@
             ]
         },
         {
-            "name": "Laporan",
-            "slug": "report",
-            "icon": "menu-icon tf-icons ti ti-file",
-            "submenu": [
-                {
-                    "url": "/report/purchase-report",
-                    "name": "Pembelian",
-                    "slug": "report-purchase-report"
-                },
-                {
-                    "url": "/report/sales-report",
-                    "name": "Penjualan",
-                    "slug": "report-sales-report"
-                }
-            ]
-        },
-        {
             "name": "Pengaturan",
             "slug": "settings",
             "icon": "menu-icon tf-icons ti ti-settings",

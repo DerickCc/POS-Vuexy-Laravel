@@ -85,6 +85,7 @@ Route::middleware(['auth'])->group(function () {
       Route::get('/', 'index')->name('index');                    // '/transaction/purchase-order/'
       Route::get('/browse-po', 'browsePo')->name('browse-po');    // '/transaction/purchase-order/browse-po'
       Route::get('/get-total-on-going-po', 'GetTotalOnGoingPo')->name('get-total-on-going-po');    // '/transaction/purchase-order/get-total-on-going-po'
+      Route::get('/export', 'export')->name('export');            // '/transaction/purchase-order/export'
       Route::get('/create', 'create')->name('create');            // '/transaction/purchase-order/create'
       Route::post('/store', 'store')->name('store');              // '/transaction/purchase-order/store'
       Route::get('/{id}/view', 'view')->name('view');             // '/transaction/purchase-order/{id}/view'
@@ -100,6 +101,7 @@ Route::middleware(['auth'])->group(function () {
       Route::get('/browse-so', 'browseSo')->name('browse-so');    // '/transaction/sales-order/browse-so'
       Route::get('/get-total-sales', 'GetTotalSales')->name('get-total-sales');    // '/transaction/purchase-order/get-total-sales'
       Route::get('/browse-incomplete-payment', 'browseIncompletePayment')->name('browse-incomplete-payment');    // '/transaction/sales-order/browse-incomplete-payment'
+      Route::get('/export', 'export')->name('export');            // '/transaction/sales-order/export'
       Route::get('/create', 'create')->name('create');            // '/transaction/sales-order/create'
       Route::post('/store', 'store')->name('store');              // '/transaction/sales-order/store'
       Route::get('/{id}/view', 'view')->name('view');             // '/transaction/sales-order/{id}/edit'
@@ -121,9 +123,6 @@ Route::middleware(['auth'])->group(function () {
       Route::put('/{id}/change-account-status', 'changeAccountStatus')->name('change-account-status');  // '/settings/user/{id}/change-account-status'
     });
   });
-
-  // // locale
-  // Route::get('lang/{locale}', [LanguageController::class, 'swap']);
 });
 
 // authentication

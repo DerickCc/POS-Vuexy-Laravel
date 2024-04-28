@@ -190,7 +190,7 @@ class ProductController extends Controller
 
     public function getTopProfitGeneratingProduct()
     {
-        $products = Product::select('id', 'name')
+        $products = Product::select('id', 'name', 'uom')
             ->with(['salesOrderProductDetails' => function ($query) {
                 $query->select('id', 'product_id', 'quantity', 'profit')->whereHas('soId', function ($subQuery) {
                     $subQuery->where('status', '!=', 'Batal');
