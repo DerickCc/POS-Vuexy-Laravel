@@ -4,7 +4,8 @@
 3. Lalu copy file .env.example dan paste, rename menjadi .env
 4. Kemudian ketik 'php artisan key:generate'
 5. Ketik 'yarn', jika belum menginstall yarn, maka ketik 'npm install --global yarn' terlebih dahulu
-6. Terakhir 'php artisan migrate'
+6. Lalu ketik 'php artisan migrate'
+7. Terakhir 'php artisan storage:link'
 
 # Cara Menjalankan Website (Development)
 1. Buka Terminal pada root directory
