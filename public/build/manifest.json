@@ -3,6 +3,13 @@
     "file": "index.html",
     "src": "Rollup HTML Asset"
   },
+  "_FileSaver.min-DWN2pOXY.js": {
+    "file": "assets/FileSaver.min-DWN2pOXY.js",
+    "imports": [
+      "__commonjsHelpers-BosuxZz1.js",
+      "__commonjs-dynamic-modules-TDtrdbi3.js"
+    ]
+  },
   "__commonjs-dynamic-modules-TDtrdbi3.js": {
     "file": "assets/_commonjs-dynamic-modules-TDtrdbi3.js"
   },
@@ -319,6 +326,16 @@
     "src": "resources/assets/js/config.js",
     "isEntry": true
   },
+  "resources/assets/js/customer-data.js": {
+    "file": "assets/customer-data-BNo6tXxz.js",
+    "src": "resources/assets/js/customer-data.js",
+    "isEntry": true
+  },
+  "resources/assets/js/dashboard.js": {
+    "file": "assets/dashboard-C0xr_ST3.js",
+    "src": "resources/assets/js/dashboard.js",
+    "isEntry": true
+  },
   "resources/assets/js/front-config.js": {
     "file": "assets/front-config-DfJ5dJVY.js",
     "src": "resources/assets/js/front-config.js",
@@ -329,6 +346,11 @@
     "src": "resources/assets/js/front-main.js",
     "isEntry": true
   },
+  "resources/assets/js/login.js": {
+    "file": "assets/login-CWJxDwFV.js",
+    "src": "resources/assets/js/login.js",
+    "isEntry": true
+  },
   "resources/assets/js/main.js": {
     "file": "assets/main-5j7CE6ND.js",
     "src": "resources/assets/js/main.js",
@@ -337,6 +359,56 @@
   "resources/assets/js/pages-auth.js": {
     "file": "assets/pages-auth-CBervO0G.js",
     "src": "resources/assets/js/pages-auth.js",
+    "isEntry": true
+  },
+  "resources/assets/js/product-data.js": {
+    "file": "assets/product-data-CozSEw5j.js",
+    "src": "resources/assets/js/product-data.js",
+    "isEntry": true
+  },
+  "resources/assets/js/product-detail.js": {
+    "file": "assets/product-detail-Dk7Yurk0.js",
+    "src": "resources/assets/js/product-detail.js",
+    "isEntry": true
+  },
+  "resources/assets/js/purchase-order-data.js": {
+    "file": "assets/purchase-order-data-DB4QlpbZ.js",
+    "src": "resources/assets/js/purchase-order-data.js",
+    "isEntry": true,
+    "imports": [
+      "_FileSaver.min-DWN2pOXY.js",
+      "__commonjsHelpers-BosuxZz1.js",
+      "__commonjs-dynamic-modules-TDtrdbi3.js"
+    ]
+  },
+  "resources/assets/js/purchase-order-detail.js": {
+    "file": "assets/purchase-order-detail-9QqAeQrV.js",
+    "src": "resources/assets/js/purchase-order-detail.js",
+    "isEntry": true
+  },
+  "resources/assets/js/sales-order-data.js": {
+    "file": "assets/sales-order-data-r9yuFT8g.js",
+    "src": "resources/assets/js/sales-order-data.js",
+    "isEntry": true,
+    "imports": [
+      "_FileSaver.min-DWN2pOXY.js",
+      "__commonjsHelpers-BosuxZz1.js",
+      "__commonjs-dynamic-modules-TDtrdbi3.js"
+    ]
+  },
+  "resources/assets/js/sales-order-detail.js": {
+    "file": "assets/sales-order-detail-CgCYL5wS.js",
+    "src": "resources/assets/js/sales-order-detail.js",
+    "isEntry": true
+  },
+  "resources/assets/js/supplier-data.js": {
+    "file": "assets/supplier-data-DHTC24Dq.js",
+    "src": "resources/assets/js/supplier-data.js",
+    "isEntry": true
+  },
+  "resources/assets/js/user-data.js": {
+    "file": "assets/user-data-Dz9R5RGj.js",
+    "src": "resources/assets/js/user-data.js",
     "isEntry": true
   },
   "resources/assets/vendor/fonts/flag-icons.scss": {
@@ -4211,12 +4283,12 @@
     "isEntry": true
   },
   "resources/css/app.css": {
-    "file": "assets/app-DP2rzg_V.js",
+    "file": "assets/app-l0sNRNKZ.js",
     "src": "resources/css/app.css",
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-l0sNRNKZ.js",
+    "file": "assets/app-DP2rzg_V.js",
     "src": "resources/js/app.js",
     "isEntry": true
   },
