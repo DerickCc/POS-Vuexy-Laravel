@@ -372,7 +372,7 @@
     "isEntry": true
   },
   "resources/assets/js/purchase-order-data.js": {
-    "file": "assets/purchase-order-data-DB4QlpbZ.js",
+    "file": "assets/purchase-order-data-EYg5NXtt.js",
     "src": "resources/assets/js/purchase-order-data.js",
     "isEntry": true,
     "imports": [
@@ -387,7 +387,7 @@
     "isEntry": true
   },
   "resources/assets/js/sales-order-data.js": {
-    "file": "assets/sales-order-data-r9yuFT8g.js",
+    "file": "assets/sales-order-data-CaIiV2dr.js",
     "src": "resources/assets/js/sales-order-data.js",
     "isEntry": true,
     "imports": [

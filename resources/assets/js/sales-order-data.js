@@ -352,7 +352,7 @@ $('.export').on('click', function (e) {
       const reportDate =
         $('#startDate').val() && $('#endDate').val() ? $('#startDate').val() + ' - ' + $('#endDate').val() : '';
 
-      const title = 'Laporan Transaksi Pembelian ' + (reportDate ? `(${reportDate})` : '');
+      const title = 'Laporan Transaksi Penjualan ' + (reportDate ? `(${reportDate})` : '');
 
       const wb = new Workbook();
       const ws = wb.addWorksheet(title);
