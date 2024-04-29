@@ -18,7 +18,7 @@
 
 <!-- Page Scripts -->
 @section('page-script')
-  @vite(['resources/assets/js/custom/dashboard.js'])
+  @vite(['resources/assets/js/dashboard.js'])
 @endsection
 
 @section('content')

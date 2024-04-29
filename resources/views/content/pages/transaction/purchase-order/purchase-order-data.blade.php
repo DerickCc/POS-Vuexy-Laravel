@@ -18,7 +18,7 @@
 
 <!-- Page Scripts -->
 @section('page-script')
-  @vite(['resources/assets/js/custom/purchase-order-data.js'])
+  @vite(['resources/assets/js/purchase-order-data.js'])
 @endsection
 
 @section('content')

@@ -13,7 +13,7 @@
 
 <!-- Page Scripts -->
 @section('page-script')
-  @vite(['resources/assets/js/custom/product-detail.js'])
+  @vite(['resources/assets/js/product-detail.js'])
 @endsection
 
 @section('content')
