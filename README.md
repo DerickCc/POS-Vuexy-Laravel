@@ -15,7 +15,6 @@
 
 ### Jika website sudah selesai di-develop, maka ketik 'yarn build' pada terminal untuk build dependency dan file-file lain yang dibutuhkan untuk menjalankan website.
 
-##Minimal Requirement Untuk Menjalankan Website
-1. Php Version
-2. Laravel Version
-3. Node Module Version 
+## Minimal Requirement Untuk Menjalankan Website
+1. Php Version 8.2
+2. Laravel Version 10
