@@ -130,8 +130,9 @@ var soTable = $('#soDatatable').DataTable({
 
 var exportAndAddButton = $(`
   <a class="btn btn-primary float-end ms-3" href="sales-order/create">Tambah</a>
-  <a class="btn btn-success float-end export" href="sales-order/export">Export</a>
+  <a class="${userData.role == 'Admin' ? 'btn btn-success' : ''} float-end export" href="sales-order/export" ${userData.role == 'Admin' ? '' : 'hidden'}>Export</a>
 `);
+
 $('.dataTables_length').append(exportAndAddButton);
 
 if ($('#startDate') && $('#endDate')) {

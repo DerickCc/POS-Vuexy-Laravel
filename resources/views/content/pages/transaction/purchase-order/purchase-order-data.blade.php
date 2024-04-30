@@ -105,4 +105,8 @@
       </table>
     </div>
   </div>
+
+  <script>
+    var userData = {!! json_encode(Auth::user()) !!};
+  </script>
 @endsection

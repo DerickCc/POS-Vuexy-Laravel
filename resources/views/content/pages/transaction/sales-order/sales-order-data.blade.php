@@ -112,4 +112,7 @@
   </div>
 
   @include('content.pages.transaction.sales-order.modal.payment-modal')
+  <script>
+    var userData = {!! json_encode(Auth::user()) !!};
+  </script>
 @endsection
