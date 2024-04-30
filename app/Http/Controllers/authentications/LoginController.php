@@ -5,6 +5,7 @@ namespace App\Http\Controllers\authentications;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
 {
@@ -23,12 +24,14 @@ class LoginController extends Controller
 
     $credentials = $request->only('username', 'password');
 
-    if (Auth::attempt($credentials)) {
+    if (Auth::attempt($credentials) && Auth::user()->account_status) {
       return redirect()->route('dashboard');
     }
 
+    $errorMessage = Auth::user()->account_status ? 'Username atau Password Anda Salah!' : 'Tidak bisa login karena akun Anda telah dinon-aktifkan!';
+
     return redirect()->back()
       ->withInput($request->only('username'))
-      ->with('error', 'Username atau Password Anda Salah!',);
+      ->with('error',  $errorMessage,);
   }
 }
