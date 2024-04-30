@@ -1,4 +1,4 @@
-# Cara Setup Website (Untuk Pertama Kali)
+## Cara Setup Website (Untuk Pertama Kali)
 1. Buka Terminal pada root directory
 2. Ketik 'composer install'
 3. Lalu copy file .env.example dan paste, rename menjadi .env
@@ -7,10 +7,15 @@
 6. Lalu ketik 'php artisan migrate'
 7. Terakhir 'php artisan storage:link'
 
-# Cara Menjalankan Website (Development)
+## Cara Menjalankan Website (Development)
 1. Buka Terminal pada root directory
 2. Ketik 'php artisan serve'
 3. Buka Terminal baru pada root directory
 4. Ketik 'yarn dev'
 
 ### Jika website sudah selesai di-develop, maka ketik 'yarn build' pada terminal untuk build dependency dan file-file lain yang dibutuhkan untuk menjalankan website.
+
+##Minimal Requirement Untuk Menjalankan Website
+1. Php Version
+2. Laravel Version
+3. Node Module Version 
